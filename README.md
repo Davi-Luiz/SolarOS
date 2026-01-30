@@ -108,10 +108,10 @@ Essas ferramentas **não fazem parte do sistema em execução**.
 
 ## 📌 Status
 
-- [x] Boot funcional
+- [x] Bootloader funcional
 - [x] Bootloader próprio
 - [x] Sistema de arquivos próprio
-- [x] Kernel inicial
+- [ ] Kernel inicial
 - [ ] Interface gráfica
 - [ ] Expansão do kernel
 - [ ] Integração avançada da SolarAI
