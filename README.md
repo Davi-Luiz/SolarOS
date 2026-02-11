@@ -1,133 +1,131 @@
-☀️ SolarOS™
+# ☀️ SolarOS™
 
-SolarOS™ is a custom-built operating system, created from scratch with a focus on performance, clean visual design, simple customization, and everyday usability.
+SolarOS™ is a custom-built operating system created from scratch with a
+focus on performance, clean visual design, simple customization, and
+real-world daily usage.
 
-It features its own bootloader, an independent kernel, and a custom file system — all designed to work together in a fast, organized, and efficient way.
+It features its own bootloader, independent kernel, and custom file
+system --- all designed to work together in a fast, organized, and
+efficient way.
 
-🎯 Objective
+------------------------------------------------------------------------
 
-The goal of SolarOS™ is to be a system that is:
+## 🎯 Objective
 
-fast
+SolarOS™ aims to be:
 
-beautiful by default
-
-easy to use
-
-highly configurable by the user
-
-built for real, continuous use
+-   Fast
+-   Beautiful by default
+-   Easy to use
+-   Highly configurable
+-   Built for real and continuous use
 
 The system evolves over time without losing simplicity.
 
-⭐ Key Features
+------------------------------------------------------------------------
 
-⚡ Fast and lightweight system
+## ⭐ Key Features
 
-🎨 Well-defined and visually pleasant interface
+-   ⚡ Lightweight and fast
+-   🎨 Well-defined visual interface
+-   🗜️ Modern compression support (JPEG XL / libjxl)
+-   🧠 Designed for AI integration (SolarAI™)
+-   📁 Custom file system (SolarSplash FS™)
+-   🔧 High user customization level
+-   🔒 Direct and stable system control
+-   ❌ No external runtime dependencies
 
-🗜️ Modern compression support (JPEG XL / libjxl)
+------------------------------------------------------------------------
 
-🧠 Designed for AI integration (SolarAI™)
+## 🧱 Architecture Overview
 
-📁 Custom file system (SolarSplash FS™)
+Firmware\
+└── SolarBoot™\
+├── System initialization\
+├── SolarSplash FS™ reading\
+├── Basic integrity verification\
+└── Launch SolarKernel™
 
-🔧 High level of user customization
+------------------------------------------------------------------------
 
-🔒 Direct and stable system control
-
-❌ No external runtime dependencies
-
-🧱 Overall Architecture
-Firmware
- └── SolarBoot™
-      ├── System initialization
-      ├── SolarSplash FS™ reading
-      ├── Basic integrity verification
-      └── Launch of SolarKernel™
-
-🚀 SolarBoot™
+## 🚀 SolarBoot™
 
 SolarBoot™ is the bootloader of SolarOS™.
 
-Main responsibilities:
+Responsibilities:
 
-start the system
+-   Start the system
+-   Load the kernel
+-   Transfer control to SolarKernel™
 
-load the kernel
+------------------------------------------------------------------------
 
-transfer control to SolarKernel™
-
-🧠 SolarKernel™
+## 🧠 SolarKernel™
 
 SolarKernel™ is the core of SolarOS™.
 
-It is responsible for:
+Responsible for:
 
-controlling system execution
+-   System execution control
+-   Memory management
+-   Process management
+-   Serving as the foundation for all system features
 
-managing memory and processes
+------------------------------------------------------------------------
 
-serving as the foundation for all SolarOS™ features
+## 💾 SolarSplash FS™
 
-💾 SolarSplash FS™
-
-SolarSplash FS™ is the file system of SolarOS™.
+SolarSplash FS™ is the custom file system of SolarOS™.
 
 Characteristics:
 
-simple structure
+-   Simple structure
+-   Fast access
+-   No file extensions
+-   Types defined by metadata
+-   Fixed and organized layout
 
-fast access
+------------------------------------------------------------------------
 
-no file extensions
+## 🧠 SolarAI™
 
-types defined by metadata
+SolarAI™ is the future AI engine of SolarOS™ designed to:
 
-fixed and organized layout
+-   Automatically improve performance
+-   Assist with system organization
+-   Adapt to user behavior
+-   Provide a smoother and more intelligent experience
 
-🧠 SolarAI™
+------------------------------------------------------------------------
 
-SolarOS™ is designed for integration with SolarAI™, an AI engine built to:
+## 🛠️ Development Tools
 
-automatically improve performance
+Used only during development:
 
-assist with system organization
-
-adapt the system to user behavior
-
-provide a smoother and more intelligent experience
-
-🛠️ Development Tools
-
-Tools used only during development:
-
-Python (helper tools)
-
-QEMU + OVMF (testing)
-
-build scripts
+-   Python (helper tools)
+-   QEMU + OVMF (testing)
+-   Build scripts
 
 These tools are not part of the running system.
 
-📌 Status
+------------------------------------------------------------------------
 
- Functional bootloader
+## 📌 Status
 
- Custom bootloader
+-   [x] Functional bootloader
+-   [x] Custom bootloader
+-   [x] Custom file system
+-   [ ] Initial kernel
+-   [ ] Graphical interface
+-   [ ] Kernel expansion
+-   [ ] Advanced SolarAI™ integration
 
- Custom file system
+------------------------------------------------------------------------
 
- Initial kernel
-
- Graphical interface
-
- Kernel expansion
-
- Advanced SolarAI™ integration
-
-☀️ Author
+## ☀️ Author
 
 Davi Luiz
 
-© 2026 SolarOS™ — GPL v3 License
+------------------------------------------------------------------------
+
+© 2026 Davi Luiz --- Licensed under GPL v3
