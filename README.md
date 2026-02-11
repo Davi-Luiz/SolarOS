@@ -2,11 +2,7 @@
 
 SolarOS™ é um **sistema operacional próprio**, criado do zero com foco em **desempenho**, **visual bonito**, **personalização simples** e **uso no dia a dia**.
 
-Ele possui um bootloader próprio, um kernel independente e um sistema de arquivos exclusivo, todos pensados para funcionar juntos de forma rápida, organizada e eficiente.
-
-> Nota:
-> SolarOS™ é uma marca não registrada.
-> O símbolo ™ é usado apenas para identificar o nome do projeto.
+Ele possui um bootloader próprio, um kernel independente e um sistema de arquivos exclusivo, todos pensados para funcionar juntos de forma rápida, organizada e eficiente
 
 ---
 
