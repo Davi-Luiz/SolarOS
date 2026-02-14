@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>404 - Página não encontrada</title>
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #0b1d3a, #050a18);
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 { font-size: 100px; margin: 0; }
+p { font-size: 20px; margin-bottom: 30px; }
+
+a {
+    text-decoration: none;
+    padding: 12px 25px;
+    background: #1e90ff;
+    color: white;
+    border-radius: 6px;
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="container">
+    <h1>404</h1>
+    <p>Página não encontrada</p>
+    <a href="/">Voltar ao início</a>
+</div>
+
+<script>
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+let mouse = { x: canvas.width/2, y: canvas.height/2 };
+
+window.addEventListener("mousemove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+});
+
+// =====================
+// CONFIG FÍSICA
+// =====================
+
+const G = 800;          // constante gravitacional
+const softening = 100;  // evita singularidade (r mínimo)
+const friction = 0.999; // leve amortecimento
+
+// =====================
+
+class Star {
+    constructor() {
+        this.reset();
+    }
+
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.2;
+        this.vy = (Math.random() - 0.5) * 0.2;
+        this.size = Math.random() * 2 + 1; // 1 a 3 px
+    }
+
+    update() {
+    const dx = mouse.x - this.x;
+    const dy = mouse.y - this.y;
+
+    const dist2 = dx*dx + dy*dy + softening;
+
+    const force = G / dist2;
+    const invDist = 1 / Math.sqrt(dist2);
+
+    const ax = dx * invDist * force;
+    const ay = dy * invDist * force;
+
+    this.vx += ax;
+    this.vy += ay;
+
+    this.vx *= friction;
+    this.vy *= friction;
+
+    this.x += this.vx;
+    this.y += this.vy;
+
+    // =========================
+    // COLISÃO COM PAREDES
+    // =========================
+    const bounce = 0.2; // 1 = elástico perfeito
+
+    // Parede esquerda
+    if (this.x <= 0) {
+        this.x = 0;
+        this.vx *= -bounce;
+    }
+
+    // Parede direita
+    if (this.x >= canvas.width - this.size) {
+        this.x = canvas.width - this.size;
+        this.vx *= -bounce;
+    }
+
+    // Parede superior
+    if (this.y <= 0) {
+        this.y = 0;
+        this.vy *= -bounce;
+    }
+
+    // Parede inferior
+    if (this.y >= canvas.height - this.size) {
+        this.y = canvas.height - this.size;
+        this.vy *= -bounce;
+    }
+}
+
+
+    draw() {
+        ctx.fillStyle = "white";
+        ctx.fillRect(this.x, this.y, this.size, this.size);
+    }
+}
+
+const stars = [];
+for (let i = 0; i < 500; i++) {
+    stars.push(new Star());
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let star of stars) {
+        star.update();
+        star.draw();
+    }
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
