@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://Davi-Luiz.github.io/SolarOS/sitemap.xml
