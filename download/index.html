@@ -1,36 +1,556 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>SolarOS</title>
-<link rel="icon" href="/SolarOS/favicon.ico">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SolarOS • Download</title>
+  <link rel="icon" href="/SolarOS/favicon.ico" />
 
-<style>
-body { margin: 0; font-family: Arial, sans-serif; }
-.navbar {
-    background-color: #111;
-    color: white;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.nav-links { display: flex; gap: 25px; }
-.nav-links a { color: white; text-decoration: none; }
-.nav-links a:hover { color: #4DA3FF; }
-</style>
+  <style>
+    :root{
+      --bg0:#05070d;
+      --bg1:#081226;
+
+      --txt:#eef3ff;
+      --muted:rgba(238,243,255,.74);
+      --muted2:rgba(238,243,255,.55);
+
+      --glass:rgba(255,255,255,.07);
+      --glass2:rgba(255,255,255,.10);
+      --stroke:rgba(255,255,255,.14);
+      --stroke2:rgba(255,255,255,.22);
+
+      --accent1:#4da3ff;
+      --accent2:#ffd65a;
+
+      --ok:#27d07d;
+
+      --r:22px;
+      --shadow: 0 22px 70px rgba(0,0,0,.52);
+      --shadow2: 0 10px 35px rgba(0,0,0,.32);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--txt);
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
+      background:
+        radial-gradient(900px 650px at 18% -10%, rgba(77,163,255,.22), transparent 60%),
+        radial-gradient(850px 600px at 92% 0%, rgba(255,214,90,.18), transparent 60%),
+        radial-gradient(780px 560px at 60% 110%, rgba(160,110,255,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* Fundo com suas imagens (se uma não existir, a outra ainda aparece) */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-2px;
+      z-index:-2;
+      background:
+        url("/SolarOS/Fundo_2_8K.png") center/cover no-repeat,
+        url("/SolarOS/Background2.png") center/cover no-repeat;
+      filter:saturate(1.05) contrast(1.02);
+      opacity:.22;
+      transform:scale(1.02);
+    }
+
+    /* Brilhos suaves + “grain” bem leve (pra ficar mais realista) */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      pointer-events:none;
+      background:
+        radial-gradient(680px 420px at 18% 18%, rgba(255,255,255,.08), transparent 62%),
+        radial-gradient(560px 380px at 78% 26%, rgba(255,255,255,.06), transparent 62%),
+        radial-gradient(900px 560px at 50% 86%, rgba(255,255,255,.05), transparent 62%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.010), rgba(255,255,255,.010) 1px, transparent 1px, transparent 3px);
+      mix-blend-mode: screen;
+      opacity:.85;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    a:focus-visible, button:focus-visible{
+      outline: 2px solid rgba(77,163,255,.75);
+      outline-offset: 3px;
+      border-radius: 14px;
+    }
+
+    .wrap{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    /* NAVBAR (vidro realista) */
+    .nav{
+      position: sticky;
+      top: 14px;
+      z-index: 50;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .nav::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(900px 260px at 15% 0%, rgba(255,214,90,.18), transparent 60%),
+        radial-gradient(820px 260px at 85% 10%, rgba(77,163,255,.18), transparent 60%),
+        linear-gradient(120deg, rgba(255,255,255,.08), transparent 40%, rgba(255,255,255,.06));
+      opacity:.55;
+      pointer-events:none;
+    }
+    .navInner{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding: 10px 14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 170px;
+    }
+    .brandDot{
+      width:12px;
+      height:12px;
+      border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(77,163,255,.85) 45%, rgba(77,163,255,.15));
+      box-shadow: 0 0 0 4px rgba(77,163,255,.12), 0 10px 25px rgba(77,163,255,.25);
+    }
+    .brandTitle{
+      font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 14px;
+      line-height: 1.1;
+    }
+    .brandSub{
+      font-size: 12px;
+      color: var(--muted2);
+      margin-top:2px;
+    }
+
+    .links{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .link{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.10);
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 12px;
+      letter-spacing: .2px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .link:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+    }
+
+    .cta{
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 12px;
+      color:#0a1220;
+      border: 1px solid rgba(0,0,0,.25);
+      background: linear-gradient(180deg, rgba(255,214,90,.98), rgba(255,174,38,.92));
+      box-shadow: 0 18px 35px rgba(255,214,90,.18);
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .cta:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+
+    .logoRight{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      min-width: 220px;
+    }
+    .logoRight img{
+      height: 28px;
+      width: auto;
+      opacity: .92;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.30));
+    }
+
+    /* HERO */
+    .hero{
+      margin-top: 18px;
+      border-radius: var(--r);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(900px 340px at 14% 0%, rgba(77,163,255,.20), transparent 62%),
+        radial-gradient(900px 340px at 86% 10%, rgba(255,214,90,.18), transparent 62%),
+        linear-gradient(120deg, rgba(255,255,255,.09), transparent 40%, rgba(255,255,255,.06));
+      opacity:.50;
+      pointer-events:none;
+    }
+    .heroInner{
+      position:relative;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      padding: 18px;
+      align-items:center;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: .2px;
+      width: fit-content;
+    }
+    .kdot{
+      width:8px;height:8px;border-radius:999px;
+      background: linear-gradient(180deg, rgba(77,163,255,1), rgba(77,163,255,.25));
+      box-shadow: 0 0 0 4px rgba(77,163,255,.10);
+    }
+    h1{
+      margin: 12px 0 8px;
+      font-size: 34px;
+      letter-spacing: .2px;
+      line-height:1.12;
+    }
+    .lead{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height:1.55;
+      max-width: 58ch;
+    }
+
+    .heroBtns{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .btn{
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      padding: 12px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 13px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.20);
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.26);
+      background: rgba(255,255,255,.08);
+    }
+
+    .btn.primary{
+      color:#071223;
+      border: 1px solid rgba(0,0,0,.25);
+      background: linear-gradient(180deg, rgba(77,163,255,.98), rgba(77,163,255,.74));
+      box-shadow: 0 18px 38px rgba(77,163,255,.18);
+    }
+
+    .btn .pill{
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.16);
+      border: 1px solid rgba(255,255,255,.16);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .btn.primary .pill{
+      background: rgba(255,255,255,.24);
+      border-color: rgba(0,0,0,.10);
+      color: rgba(10,18,32,.82);
+    }
+
+    .preview{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.14);
+      overflow:hidden;
+      position:relative;
+      box-shadow: 0 22px 60px rgba(0,0,0,.46);
+      min-height: 280px;
+    }
+    .preview::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(520px 240px at 20% 0%, rgba(255,255,255,.10), transparent 62%),
+        linear-gradient(120deg, rgba(255,255,255,.12), transparent 40%, rgba(255,255,255,.06));
+      opacity:.55;
+      pointer-events:none;
+    }
+    .preview img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+      transform: scale(1.02);
+      filter: saturate(1.02) contrast(1.02);
+    }
+
+    /* SECTIONS */
+    .grid{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+
+    .card{
+      grid-column: span 6;
+      border-radius: var(--r);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow2);
+      position:relative;
+      overflow:hidden;
+      padding: 16px;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(680px 240px at 20% 0%, rgba(77,163,255,.16), transparent 62%),
+        radial-gradient(680px 240px at 85% 10%, rgba(255,214,90,.12), transparent 62%);
+      opacity:.35;
+      pointer-events:none;
+    }
+    .card > *{ position:relative; }
+
+    .card h2{
+      margin:0 0 8px;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .card p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.55;
+    }
+    .miniRow{
+      margin-top: 12px;
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+    .tag{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 12px;
+      letter-spacing:.2px;
+    }
+    .tick{
+      width:10px;height:10px;border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(39,208,125,.85) 45%, rgba(39,208,125,.20));
+      box-shadow: 0 0 0 4px rgba(39,208,125,.10);
+    }
+
+    .full{ grid-column: span 12; }
+
+    .footer{
+      margin: 18px 0 6px;
+      text-align:center;
+      color: var(--muted2);
+      font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .heroInner{ grid-template-columns: 1fr; }
+      .logoRight{ display:none; }
+      .card{ grid-column: span 12; }
+      .navInner{ padding: 10px 12px; }
+    }
+
+    @media (max-width: 520px){
+      h1{ font-size: 28px; }
+      .brand{ min-width: unset; }
+      .link{ padding: 9px 10px; }
+    }
+
+    /* Âncora com offset do sticky */
+    .anchor{ scroll-margin-top: 92px; }
+  </style>
 </head>
-<body>
-<img src="/SolarOS/resultado.webp" alt="SolarOS Logo" width="300">
-<div class="navbar">
-    <div class="logo">SolarOS</div>
-    <div class="nav-links">
-        <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">License</a>
-        <a href="https://discord.gg/3RBkhPtf" target="_blank">Community</a>
-        <a href="https://github.com/Davi-Luiz/SolarOS" target="_blank">Source Code</a>
-        <a href="#download" class="download-btn">Download</a>
 
+<body>
+  <div class="wrap">
+    <!-- NAV -->
+    <header class="nav">
+      <div class="navInner">
+        <div class="brand">
+          <div class="brandDot"></div>
+          <div>
+            <div class="brandTitle">SolarOS</div>
+            <div class="brandSub">Página de download</div>
+          </div>
+        </div>
+
+        <nav class="links" aria-label="Links">
+          <a class="link" href="/SolarOS/" title="Voltar para o site">Home</a>
+          <a class="link" href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noreferrer">License</a>
+          <a class="link" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">Community</a>
+          <a class="link" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Source Code</a>
+          <a class="cta" href="#download">Download</a>
+        </nav>
+
+        <div class="logoRight" title="SolarOS">
+          <img src="/SolarOS/SolarLogoComNome.png" alt="SolarOS" />
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" style="margin-top:16px;">
+      <div class="heroInner">
+        <div>
+          <div class="kicker"><span class="kdot"></span> Liquid Glass • Realista • Scroll</div>
+          <h1>Baixe o SolarOS</h1>
+          <p class="lead">
+            Aqui ficam os downloads e links oficiais. Se você estiver usando GitHub Pages,
+            os arquivos e imagens do repositório são servidos direto daqui.
+          </p>
+
+          <div class="heroBtns">
+            <a class="btn primary" href="https://github.com/Davi-Luiz/SolarOS/releases/latest" target="_blank" rel="noreferrer">
+              Releases <span class="pill">latest</span>
+            </a>
+            <a class="btn" href="#download">
+              Ir para downloads <span class="pill">abaixo</span>
+            </a>
+            <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">
+              Ver repositório <span class="pill">GitHub</span>
+            </a>
+          </div>
+
+          <div class="miniRow" style="margin-top:14px;">
+            <span class="tag"><span class="tick"></span> Oficial</span>
+            <span class="tag">Assets do repo</span>
+            <span class="tag">Design vidro</span>
+          </div>
+        </div>
+
+        <div class="preview" aria-label="Preview">
+          <img src="/SolarOS/resultado.webp" alt="Preview SolarOS" />
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="grid">
+      <div class="card full anchor" id="download">
+        <h2>Downloads</h2>
+        <p>
+          Se você ainda não publicou um arquivo direto aqui no Pages, o jeito mais comum é usar
+          <b>GitHub Releases</b> e colocar o link do arquivo lá.
+        </p>
+
+        <div class="miniRow" style="margin-top:12px;">
+          <a class="btn primary" href="https://github.com/Davi-Luiz/SolarOS/releases/latest" target="_blank" rel="noreferrer">
+            Baixar pelo Releases <span class="pill">recomendado</span>
+          </a>
+          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS/releases" target="_blank" rel="noreferrer">
+            Ver todas as versões <span class="pill">history</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Checklist rápido</h2>
+        <p>
+          Para ficar bem “profissional”, normalmente você coloca: versão, tamanho do arquivo,
+          hash (SHA-256) e instruções de boot/uso.
+        </p>
+
+        <div class="miniRow">
+          <span class="tag"><span class="tick"></span> Versão</span>
+          <span class="tag"><span class="tick"></span> SHA-256</span>
+          <span class="tag"><span class="tick"></span> Instruções</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Links úteis</h2>
+        <p>
+          Comunidade, código e licença ficam sempre acessíveis no topo.
+          Se você quiser, dá pra adicionar um botão “Docs” aqui também.
+        </p>
+
+        <div class="miniRow">
+          <a class="btn" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">Abrir Discord</a>
+          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Abrir GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      SolarOS • Download • GitHub Pages
     </div>
-</div>
+  </div>
 </body>
 </html>
