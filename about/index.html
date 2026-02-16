@@ -17,11 +17,6 @@
 
       --stroke:rgba(255,255,255,.14);
 
-      --accent1:#4da3ff;
-      --accent2:#ffd65a;
-
-      --ok:#27d07d;
-
       --r:22px;
       --shadow: 0 22px 70px rgba(0,0,0,.52);
       --shadow2: 0 10px 35px rgba(0,0,0,.32);
@@ -80,7 +75,7 @@
       padding: 22px;
     }
 
-    /* NAVBAR */
+    /* NAV */
     .nav{
       position: sticky;
       top: 14px;
@@ -117,32 +112,19 @@
       display:flex;
       align-items:center;
       gap:12px;
-      min-width: 220px;
+      min-width: 200px;
     }
     .brandLogo{
-      height: 32px;
-      width: 32px;
-      border-radius: 12px;
+      height: 30px;
+      width: auto;
+      max-width: 220px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.12);
+      background: rgba(0,0,0,.10);
       box-shadow: 0 10px 26px rgba(0,0,0,.30);
-      object-fit: cover;
       display:block;
-    }
-    .brandText{
-      display:flex;
-      flex-direction:column;
-      line-height:1.1;
-    }
-    .brandTitle{
-      font-weight: 950;
-      letter-spacing: .2px;
-      font-size: 13px;
-    }
-    .brandSub{
-      font-size: 12px;
-      color: rgba(238,243,255,.55);
-      margin-top:2px;
+      object-fit: contain;
+      padding: 4px;
     }
 
     .links{
@@ -157,7 +139,7 @@
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.10);
-      color: rgba(238,243,255,.74);
+      color: var(--muted);
       font-weight: 850;
       font-size: 12px;
       letter-spacing: .2px;
@@ -167,7 +149,7 @@
       transform: translateY(-1px);
       border-color: rgba(255,255,255,.22);
       background: rgba(255,255,255,.06);
-      color: rgba(238,243,255,1);
+      color: var(--txt);
     }
 
     .cta{
@@ -208,43 +190,20 @@
       opacity:.50;
       pointer-events:none;
     }
-    .heroInner{
-      position:relative;
-      padding: 18px;
-    }
-
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.14);
-      color: rgba(238,243,255,.74);
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: .2px;
-      width: fit-content;
-    }
-    .kdot{
-      width:8px;height:8px;border-radius:999px;
-      background: linear-gradient(180deg, rgba(77,163,255,1), rgba(77,163,255,.25));
-      box-shadow: 0 0 0 4px rgba(77,163,255,.10);
-    }
+    .heroInner{ position:relative; padding:18px; }
 
     h1{
-      margin: 12px 0 8px;
+      margin: 0 0 8px;
       font-size: 34px;
       letter-spacing: .2px;
       line-height:1.12;
     }
     .lead{
       margin:0;
-      color: rgba(238,243,255,.74);
+      color: var(--muted);
       font-size: 14px;
       line-height:1.6;
-      max-width: 75ch;
+      max-width: 78ch;
     }
 
     .notice{
@@ -256,12 +215,19 @@
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.16);
-      color: rgba(238,243,255,.74);
+      color: var(--muted);
       font-size: 13px;
       line-height:1.45;
-      max-width: 78ch;
+      max-width: 82ch;
     }
-    .notice strong{ color: rgba(238,243,255,1); font-weight: 950; }
+    .dot{
+      width:8px;height:8px;border-radius:999px;
+      background: linear-gradient(180deg, rgba(77,163,255,1), rgba(77,163,255,.25));
+      box-shadow: 0 0 0 4px rgba(77,163,255,.10);
+      margin-top: 4px;
+      flex: 0 0 auto;
+    }
+    .notice strong{ color: var(--txt); font-weight: 950; }
 
     .grid{
       margin-top: 16px;
@@ -272,7 +238,7 @@
     .card{
       grid-column: span 6;
       border-radius: var(--r);
-      border: 1px solid rgba(255,255,255,.14);
+      border: 1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
@@ -292,18 +258,23 @@
       pointer-events:none;
     }
     .card > *{ position:relative; }
+
     .card h2{
       margin:0 0 8px;
       font-size: 16px;
       letter-spacing:.2px;
     }
-    .card p{
+    .card p, .card li{
       margin:0;
-      color: rgba(238,243,255,.74);
+      color: var(--muted);
       font-size: 13px;
       line-height:1.55;
     }
-    .full{ grid-column: span 12; }
+    .card ul{
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+    .card li{ margin: 6px 0; }
 
     .miniRow{
       margin-top: 12px;
@@ -312,30 +283,10 @@
       flex-wrap: wrap;
       align-items:center;
     }
-    .tag{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
-      color: rgba(238,243,255,.74);
-      font-weight: 850;
-      font-size: 12px;
-      letter-spacing:.2px;
-      white-space:nowrap;
-    }
-    .tick{
-      width:10px;height:10px;border-radius:999px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(39,208,125,.85) 45%, rgba(39,208,125,.20));
-      box-shadow: 0 0 0 4px rgba(39,208,125,.10);
-    }
-
     .btn{
       border: 1px solid rgba(255,255,255,.16);
       background: rgba(255,255,255,.06);
-      color: rgba(238,243,255,1);
+      color: var(--txt);
       padding: 12px 14px;
       border-radius: 16px;
       cursor: pointer;
@@ -360,25 +311,13 @@
       background: linear-gradient(180deg, rgba(77,163,255,.98), rgba(77,163,255,.74));
       box-shadow: 0 18px 38px rgba(77,163,255,.18);
     }
-    .btn .pill{
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.16);
-      border: 1px solid rgba(255,255,255,.16);
-      color: rgba(238,243,255,.74);
-      font-size: 11px;
-      font-weight: 900;
-    }
-    .btn.primary .pill{
-      background: rgba(255,255,255,.24);
-      border-color: rgba(0,0,0,.10);
-      color: rgba(10,18,32,.82);
-    }
+
+    .full{ grid-column: span 12; }
 
     .footer{
       margin: 18px 0 6px;
       text-align:center;
-      color: rgba(238,243,255,.55);
+      color: var(--muted2);
       font-size: 12px;
     }
 
@@ -386,11 +325,12 @@
       .card{ grid-column: span 12; }
       .navInner{ padding: 10px 12px; }
       .brand{ min-width: unset; }
+      .brandLogo{ max-width: 160px; }
     }
     @media (max-width: 520px){
       h1{ font-size: 28px; }
       .link{ padding: 9px 10px; }
-      .brandLogo{ height: 30px; width: 30px; border-radius: 11px; }
+      .brandLogo{ height: 28px; border-radius: 13px; padding: 4px; }
     }
   </style>
 </head>
@@ -400,12 +340,8 @@
     <!-- NAV -->
     <header class="nav">
       <div class="navInner">
-        <a class="brand" href="/SolarOS/" title="Back to Home">
-          <img class="brandLogo" src="/SolarOS/SolarLogoWithName.png" alt="SolarOS logo" />
-          <div class="brandText">
-            <div class="brandTitle">SolarOS</div>
-            <div class="brandSub">About</div>
-          </div>
+        <a class="brand" href="/SolarOS/" title="Home">
+          <img class="brandLogo" src="/SolarOS/SolarLogoWithName.png" alt="SolarOS" />
         </a>
 
         <nav class="links" aria-label="Primary">
@@ -422,32 +358,23 @@
     <!-- HERO -->
     <section class="hero" style="margin-top:16px;">
       <div class="heroInner">
-        <div class="kicker"><span class="kdot"></span> Minimal • High quality • Built with care</div>
         <h1>About SolarOS</h1>
         <p class="lead">
-          SolarOS is a long-term operating system project focused on a clean experience,
-          strong visual identity, and a modern “glass” interface style — while keeping the website
-          stable and professional.
+          SolarOS™ is a custom-built operating system created from scratch with a focus on performance,
+          clean visual design, simple customization, and real-world daily usage.
         </p>
 
-        <div class="notice" role="note" aria-label="Release status">
-          <div class="kdot" style="margin-top:4px;"></div>
+        <div class="notice" role="note" aria-label="Status">
+          <span class="dot"></span>
           <div>
-            <strong>SolarOS 1.0 is not ready yet.</strong>
-            Development is in progress, and this website is already the final official hub.
+            <strong>Status:</strong> SolarOS 1.0 is not ready yet. Core components are in progress and will expand over time.
           </div>
         </div>
 
         <div class="miniRow" style="margin-top:14px;">
-          <a class="btn primary" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">
-            Join the community <span class="pill">Discord</span>
-          </a>
-          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">
-            Follow the code <span class="pill">GitHub</span>
-          </a>
-          <a class="btn" href="/SolarOS/download/">
-            Go to downloads <span class="pill">soon</span>
-          </a>
+          <a class="btn primary" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">Community</a>
+          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Source Code</a>
+          <a class="btn" href="/SolarOS/download/">Downloads</a>
         </div>
       </div>
     </section>
@@ -455,51 +382,78 @@
     <!-- CONTENT -->
     <section class="grid">
       <div class="card full">
-        <h2>What is SolarOS?</h2>
-        <p>
-          SolarOS is a personal OS project that aims to feel modern, minimal, and consistent — with a strong
-          visual brand and a clean UI language. The goal is a polished experience that stays coherent across
-          the website, community, and the OS itself.
+        <h2>Objective</h2>
+        <p>SolarOS™ aims to be:</p>
+        <ul>
+          <li>Fast</li>
+          <li>Beautiful by default</li>
+          <li>Easy to use</li>
+          <li>Highly configurable</li>
+          <li>Built for real and continuous use</li>
+        </ul>
+        <p style="margin-top:10px;">
+          The system evolves over time without losing simplicity.
         </p>
-
-        <div class="miniRow">
-          <span class="tag"><span class="tick"></span> Minimal UI</span>
-          <span class="tag"><span class="tick"></span> Clear identity</span>
-          <span class="tag"><span class="tick"></span> Professional public hub</span>
-        </div>
       </div>
 
       <div class="card">
-        <h2>Project status</h2>
-        <p>
-          SolarOS is under active development. The first public stable build will be published when SolarOS 1.0 is ready.
-          Until then, updates are shared through the community and the source repository.
-        </p>
-
-        <div class="miniRow">
-          <span class="tag">SolarOS 1.0: in progress</span>
-          <span class="tag">Website: final</span>
-          <span class="tag">Downloads: coming soon</span>
-        </div>
+        <h2>Key Features</h2>
+        <ul>
+          <li>Lightweight and fast</li>
+          <li>Well-defined visual interface</li>
+          <li>Modern compression support (JPEG XL / libjxl)</li>
+          <li>Designed for AI integration (SolarAI™)</li>
+          <li>Custom file system (SolarSplash FS™)</li>
+          <li>High user customization level</li>
+          <li>Direct and stable system control</li>
+          <li>No external runtime dependencies</li>
+        </ul>
       </div>
 
       <div class="card">
-        <h2>Open source & community</h2>
-        <p>
-          SolarOS is intended to be transparent and community-driven: discussions, feedback, and updates happen in the Discord,
-          while source and progress stay visible on GitHub.
-        </p>
+        <h2>Architecture Overview</h2>
+        <ul>
+          <li><strong>Firmware → SolarBoot™</strong>: initialization, SolarSplash FS™ reading, basic integrity verification, then launches SolarKernel™</li>
+          <li><strong>SolarKernel™</strong>: system execution control, memory management, process management</li>
+          <li><strong>SolarSplash FS™</strong>: no file extensions; types defined by metadata; fixed and organized layout</li>
+          <li><strong>SolarAI™</strong>: planned AI engine for performance, organization, and user adaptation</li>
+        </ul>
+      </div>
 
-        <div class="miniRow">
-          <a class="btn" href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noreferrer">Read License</a>
-          <a class="btn" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">Open Discord</a>
-          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Open GitHub</a>
-        </div>
+      <div class="card full">
+        <h2>Development Tools</h2>
+        <p>Used only during development:</p>
+        <ul>
+          <li>Python (helper tools)</li>
+          <li>QEMU + OVMF (testing)</li>
+          <li>Build scripts</li>
+        </ul>
+        <p style="margin-top:10px;">
+          These tools are not part of the running system.
+        </p>
+      </div>
+
+      <div class="card full">
+        <h2>Status</h2>
+        <ul>
+          <li>Functional bootloader</li>
+          <li>Custom bootloader</li>
+          <li>Custom file system</li>
+          <li>Initial kernel</li>
+          <li>Graphical interface</li>
+          <li>Kernel expansion</li>
+          <li>Advanced SolarAI™ integration</li>
+        </ul>
+      </div>
+
+      <div class="card full">
+        <h2>Author</h2>
+        <p>Davi Luiz</p>
       </div>
     </section>
 
     <div class="footer">
-      SolarOS • About • GitHub Pages
+      © 2026 Davi Luiz — Licensed under GPL v3
     </div>
   </div>
 </body>
