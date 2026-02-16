@@ -16,14 +16,10 @@
       --muted2:rgba(238,243,255,.55);
 
       --glass:rgba(255,255,255,.07);
-      --glass2:rgba(255,255,255,.10);
       --stroke:rgba(255,255,255,.14);
-      --stroke2:rgba(255,255,255,.22);
 
       --accent1:#4da3ff;
       --accent2:#ffd65a;
-
-      --ok:#27d07d;
 
       --r:22px;
       --shadow: 0 22px 70px rgba(0,0,0,.52);
@@ -118,36 +114,24 @@
       padding: 10px 14px;
     }
 
+    /* Brand: logo retangular (não força quadrado) */
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      min-width: 220px;
+      min-width: 200px;
     }
     .brandLogo{
-      height: 32px;
-      width: 32px;
-      border-radius: 12px; /* requested */
+      height: 30px;
+      width: auto;            /* <- importante */
+      max-width: 220px;
+      border-radius: 14px;    /* <- deixa “soft” mesmo com fundo */
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.12);
+      background: rgba(0,0,0,.10);
       box-shadow: 0 10px 26px rgba(0,0,0,.30);
-      object-fit: cover;
       display:block;
-    }
-    .brandText{
-      display:flex;
-      flex-direction:column;
-      line-height:1.1;
-    }
-    .brandTitle{
-      font-weight: 950;
-      letter-spacing: .2px;
-      font-size: 13px;
-    }
-    .brandSub{
-      font-size: 12px;
-      color: var(--muted2);
-      margin-top:2px;
+      object-fit: contain;    /* <- não corta */
+      padding: 4px;           /* <- dá respiro se a imagem tem fundo */
     }
 
     .links{
@@ -222,27 +206,8 @@
       align-items:center;
     }
 
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.14);
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: .2px;
-      width: fit-content;
-    }
-    .kdot{
-      width:8px;height:8px;border-radius:999px;
-      background: linear-gradient(180deg, rgba(77,163,255,1), rgba(77,163,255,.25));
-      box-shadow: 0 0 0 4px rgba(77,163,255,.10);
-    }
     h1{
-      margin: 12px 0 8px;
+      margin: 0 0 8px;
       font-size: 34px;
       letter-spacing: .2px;
       line-height:1.12;
@@ -252,7 +217,7 @@
       color: var(--muted);
       font-size: 14px;
       line-height:1.55;
-      max-width: 60ch;
+      max-width: 62ch;
     }
 
     .notice{
@@ -267,7 +232,14 @@
       color: var(--muted);
       font-size: 13px;
       line-height:1.45;
-      max-width: 62ch;
+      max-width: 68ch;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:999px;
+      background: linear-gradient(180deg, rgba(77,163,255,1), rgba(77,163,255,.25));
+      box-shadow: 0 0 0 4px rgba(77,163,255,.10);
+      margin-top: 4px;
+      flex: 0 0 auto;
     }
     .notice strong{ color: var(--txt); font-weight: 950; }
 
@@ -351,7 +323,7 @@
       filter: saturate(1.02) contrast(1.02);
     }
 
-    /* SECTIONS */
+    /* CONTENT */
     .grid{
       margin-top: 16px;
       display:grid;
@@ -394,6 +366,7 @@
       font-size: 13px;
       line-height:1.55;
     }
+
     .miniRow{
       margin-top: 12px;
       display:flex;
@@ -415,11 +388,6 @@
       letter-spacing:.2px;
       white-space:nowrap;
     }
-    .tick{
-      width:10px;height:10px;border-radius:999px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(39,208,125,.85) 45%, rgba(39,208,125,.20));
-      box-shadow: 0 0 0 4px rgba(39,208,125,.10);
-    }
 
     .full{ grid-column: span 12; }
 
@@ -430,21 +398,20 @@
       font-size: 12px;
     }
 
-    /* Responsive */
     @media (max-width: 980px){
       .heroInner{ grid-template-columns: 1fr; }
       .card{ grid-column: span 12; }
       .navInner{ padding: 10px 12px; }
       .brand{ min-width: unset; }
+      .brandLogo{ max-width: 160px; }
     }
 
     @media (max-width: 520px){
       h1{ font-size: 28px; }
       .link{ padding: 9px 10px; }
-      .brandLogo{ height: 30px; width: 30px; border-radius: 11px; }
+      .brandLogo{ height: 28px; border-radius: 13px; padding: 4px; }
     }
 
-    /* Anchor offset for sticky nav */
     .anchor{ scroll-margin-top: 92px; }
   </style>
 </head>
@@ -454,12 +421,8 @@
     <!-- NAV -->
     <header class="nav">
       <div class="navInner">
-        <a class="brand" href="/SolarOS/" title="Back to Home">
-          <img class="brandLogo" src="/SolarOS/SolarLogoWithName.png" alt="SolarOS logo" />
-          <div class="brandText">
-            <div class="brandTitle">SolarOS</div>
-            <div class="brandSub">Download</div>
-          </div>
+        <a class="brand" href="/SolarOS/" title="Home">
+          <img class="brandLogo" src="/SolarOS/SolarLogoWithName.png" alt="SolarOS" />
         </a>
 
         <nav class="links" aria-label="Primary">
@@ -477,42 +440,34 @@
     <section class="hero" style="margin-top:16px;">
       <div class="heroInner">
         <div>
-          <div class="kicker"><span class="kdot"></span> Liquid Glass • Realistic • Clean</div>
           <h1>Download SolarOS</h1>
           <p class="lead">
-            This page will host the official downloads and install notes.
-            The website is final, but the OS is still actively being built.
+            Official downloads and install notes will appear here.
           </p>
 
-          <div class="notice" role="note" aria-label="Release status">
-            <div class="kdot" style="margin-top:4px;"></div>
+          <div class="notice" role="note" aria-label="Status">
+            <span class="dot"></span>
             <div>
-              <strong>SolarOS 1.0 is not ready yet.</strong>
-              Public builds will appear here once the first stable release is available.
+              <strong>SolarOS 1.0 is not ready yet.</strong><br/>
+              Public builds will be published here when the first stable release is available.
             </div>
           </div>
 
           <div class="heroBtns">
             <a class="btn primary" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">
-              Join the community <span class="pill">Discord</span>
+              Community <span class="pill">Discord</span>
             </a>
             <a class="btn" href="#download">
-              Go to downloads <span class="pill">below</span>
+              Downloads <span class="pill">below</span>
             </a>
             <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">
-              View source <span class="pill">GitHub</span>
+              Source Code <span class="pill">GitHub</span>
             </a>
-          </div>
-
-          <div class="miniRow" style="margin-top:14px;">
-            <span class="tag"><span class="tick"></span> Official website</span>
-            <span class="tag">Transparent updates</span>
-            <span class="tag">Professional layout</span>
           </div>
         </div>
 
         <div class="preview" aria-label="Preview">
-          <img src="/SolarOS/resultado.webp" alt="SolarOS preview image" />
+          <img src="/SolarOS/resultado.webp" alt="SolarOS preview" />
         </div>
       </div>
     </section>
@@ -522,14 +477,13 @@
       <div class="card full anchor" id="download">
         <h2>Downloads</h2>
         <p>
-          There are no public downloads available yet. When SolarOS 1.0 is ready, this section will show:
-          build files, version notes, and simple installation steps.
+          No public downloads yet. When SolarOS 1.0 is ready, this page will list the build files,
+          version notes, and installation steps.
         </p>
 
         <div class="miniRow" style="margin-top:12px;">
-          <span class="tag"><span class="tick"></span> Coming soon</span>
-          <span class="tag">SolarOS 1.0 in development</span>
-          <span class="tag">Links will be posted here</span>
+          <span class="tag">SolarOS 1.0: in development</span>
+          <span class="tag">Downloads: coming soon</span>
         </div>
 
         <div class="miniRow" style="margin-top:12px;">
@@ -537,42 +491,35 @@
             Get updates <span class="pill">Discord</span>
           </a>
           <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">
-            Follow development <span class="pill">GitHub</span>
+            Track progress <span class="pill">GitHub</span>
           </a>
         </div>
       </div>
 
       <div class="card">
-        <h2>What you’ll find here</h2>
+        <h2>Where releases will be posted</h2>
         <p>
-          Once available, each build will include a clear version label and simple notes.
-          This page will stay stable so it can be linked as the official download hub.
+          Builds will be published through the official links above (GitHub and Discord).
+          This page will always be the permanent download hub.
         </p>
-
-        <div class="miniRow">
-          <span class="tag"><span class="tick"></span> Versioned builds</span>
-          <span class="tag"><span class="tick"></span> Install notes</span>
-          <span class="tag"><span class="tick"></span> Official links</span>
-        </div>
       </div>
 
       <div class="card">
-        <h2>Useful links</h2>
+        <h2>Quick links</h2>
         <p>
-          Community and source code stay accessible at the top.
-          If you want, you can add a dedicated “Docs” page later.
+          If you’re looking for project info, use the About page. For updates, use Discord or GitHub.
         </p>
 
         <div class="miniRow">
-          <a class="btn" href="/SolarOS/about/">Read About</a>
-          <a class="btn" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">Open Discord</a>
-          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Open GitHub</a>
+          <a class="btn" href="/SolarOS/about/">About</a>
+          <a class="btn" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">Discord</a>
+          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">GitHub</a>
         </div>
       </div>
     </section>
 
     <div class="footer">
-      SolarOS • Download • GitHub Pages
+      © 2026 Davi Luiz — Licensed under GPL v3
     </div>
   </div>
 </body>
