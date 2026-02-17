@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -41,7 +41,7 @@
       overflow:hidden;
     }
 
-    /* Background image (opcional) */
+    /* Background image (optional) */
     body::before{
       content:"";
       position:fixed;
@@ -76,7 +76,7 @@
       border-radius: 14px;
     }
 
-    /* Canvas atrás de tudo */
+    /* Canvas behind everything */
     canvas{
       position:fixed;
       inset:0;
@@ -96,7 +96,7 @@
       gap: 16px;
     }
 
-    /* NAV pill (mesmo vibe da página de download) */
+    /* NAV pill */
     .nav{
       margin-top: 10px;
       border-radius: 999px;
@@ -186,7 +186,7 @@
     }
     .cta:hover{ transform: translateY(-1px); filter: brightness(1.02); }
 
-    /* Card principal */
+    /* Main card */
     .center{
       flex:1;
       display:flex;
@@ -372,38 +372,38 @@
     </header>
 
     <main class="center">
-      <section class="card" aria-label="Erro 404">
+      <section class="card" aria-label="404 error">
         <div class="topRow">
           <p class="code404" aria-label="404">404</p>
 
-          <div class="badge" title="Interação">
+          <div class="badge" title="Interaction">
             <span class="badgeDot"></span>
-            Mova o mouse: gravidade
+            Move your mouse: gravity
           </div>
         </div>
 
-        <h1>Página não encontrada</h1>
+        <h1>Page not found</h1>
         <p>
-          Esse link não existe (ou foi movido). Mas relaxa: você ainda está no universo do SolarOS.
+          This link doesn’t exist (or it was moved). But you’re still inside the SolarOS universe.
         </p>
 
-        <div class="btnRow" role="group" aria-label="Ações">
+        <div class="btnRow" role="group" aria-label="Actions">
           <a class="btn primary" href="/SolarOS/">
-            Voltar ao início <span class="pill">Home</span>
+            Back to home <span class="pill">Home</span>
           </a>
           <a class="btn" href="/SolarOS/download/">
-            Ir para downloads <span class="pill">Hub</span>
+            Go to downloads <span class="pill">Hub</span>
           </a>
           <a class="btn" href="javascript:history.back()">
-            Voltar <span class="pill">Browser</span>
+            Go back <span class="pill">Browser</span>
           </a>
         </div>
 
         <div class="hint" role="note">
           <span style="width:10px;height:10px;border-radius:999px;background:rgba(255,214,90,.85);box-shadow:0 0 0 4px rgba(255,214,90,.10);margin-top:4px;flex:0 0 auto;"></span>
           <div>
-            <b>Dica:</b> se você quiser deixar ainda mais “site oficial”, dá pra trocar o texto por algo tipo
-            “Você saiu da órbita” e manter essa mesma estética de vidro.
+            <b>Tip:</b> If you want it even more “official”, you can replace the text with something like
+            “You drifted out of orbit” while keeping this glass style.
           </div>
         </div>
       </section>
@@ -438,7 +438,7 @@
       buildStars();
     });
 
-    // Mouse / toque
+    // Mouse / touch
     const mouse = { x: W * 0.5, y: H * 0.5, tx: W * 0.5, ty: H * 0.5 };
     function setTarget(x, y){ mouse.tx = x; mouse.ty = y; }
     window.addEventListener("mousemove", (e) => setTarget(e.clientX, e.clientY), { passive: true });
@@ -448,16 +448,16 @@
     }, { passive: true });
 
     // Config
-    const softening = 140;              // evita singularidade
-    const bounce = 0.18;                // colisão suave
-    const baseFriction = 0.992;         // amortecimento
-    const baseG = 950;                  // força "gravidade"
-    const maxSpeed = 6.0;               // trava velocidade
+    const softening = 140;              // avoids singularity
+    const bounce = 0.18;                // soft wall collision
+    const baseFriction = 0.992;         // damping
+    const baseG = 950;                  // "gravity" strength
+    const maxSpeed = 6.0;               // speed clamp
 
     let stars = [];
 
     function starCountFor(w, h){
-      // Ajusta sozinho conforme o tamanho da tela (mais leve em telas menores)
+      // Auto-adjust by screen size (lighter on smaller screens)
       const density = (w * h) / 6500;
       return Math.max(220, Math.min(520, Math.floor(density)));
     }
@@ -485,7 +485,7 @@
       const dt = Math.min(0.033, (now - last) / 1000); // clamp
       last = now;
 
-      // suaviza o mouse pra ficar “premium”
+      // Smooth mouse for a more premium feel
       const smooth = 1 - Math.pow(0.0001, dt);
       mouse.x += (mouse.tx - mouse.x) * smooth;
       mouse.y += (mouse.ty - mouse.y) * smooth;
@@ -493,7 +493,7 @@
       ctx.clearRect(0, 0, W, H);
 
       if (reduceMotion){
-        // modo "calmo": desenha sem atualizar física
+        // Calm mode: draw without updating physics
         for (const st of stars){
           ctx.fillStyle = "rgba(255,255,255,.9)";
           ctx.fillRect(st.x, st.y, st.s, st.s);
@@ -502,7 +502,7 @@
         return;
       }
 
-      // friction coerente com fps
+      // Friction consistent across FPS
       const friction = Math.pow(baseFriction, dt * 60);
       const G = baseG;
 
@@ -517,7 +517,7 @@
         st.vx += dx * invDist * force * dt * 60;
         st.vy += dy * invDist * force * dt * 60;
 
-        // limita velocidade
+        // Clamp speed
         const sp = Math.hypot(st.vx, st.vy);
         if (sp > maxSpeed){
           const k = maxSpeed / sp;
@@ -530,7 +530,7 @@
         st.x += st.vx;
         st.y += st.vy;
 
-        // colisões
+        // Collisions
         if (st.x < 0){ st.x = 0; st.vx *= -bounce; }
         if (st.x > W - st.s){ st.x = W - st.s; st.vx *= -bounce; }
         if (st.y < 0){ st.y = 0; st.vy *= -bounce; }
