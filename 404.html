@@ -1,172 +1,549 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>404 - Página não encontrada</title>
-<link rel="icon" href="/SolarOS/favicon.ico">
-<style>
-body {
-    margin: 0;
-    overflow: hidden;
-    background: radial-gradient(circle at center, #0b1d3a, #050a18);
-    color: white;
-    font-family: Arial, sans-serif;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#05070d" />
+  <title>404 • SolarOS</title>
+  <link rel="icon" href="/SolarOS/favicon.ico" />
 
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 0;
-}
+  <style>
+    :root{
+      --bg0:#05070d;
+      --bg1:#081226;
 
-.container {
-    position: relative;
-    z-index: 1;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+      --txt:#eef3ff;
+      --muted:rgba(238,243,255,.74);
+      --muted2:rgba(238,243,255,.55);
 
-h1 { font-size: 100px; margin: 0; }
-p { font-size: 20px; margin-bottom: 30px; }
+      --glass:rgba(255,255,255,.07);
+      --stroke:rgba(255,255,255,.14);
 
-a {
-    text-decoration: none;
-    padding: 12px 25px;
-    background: #1e90ff;
-    color: white;
-    border-radius: 6px;
-}
-</style>
+      --accent1:#4da3ff;
+      --accent2:#ffd65a;
+
+      --r:22px;
+      --shadow: 0 22px 70px rgba(0,0,0,.52);
+      --shadow2: 0 10px 35px rgba(0,0,0,.32);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--txt);
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
+      background:
+        radial-gradient(900px 650px at 18% -10%, rgba(77,163,255,.22), transparent 60%),
+        radial-gradient(850px 600px at 92% 0%, rgba(255,214,90,.18), transparent 60%),
+        radial-gradient(780px 560px at 60% 110%, rgba(160,110,255,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow:hidden;
+    }
+
+    /* Background image (opcional) */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-2px;
+      z-index:-3;
+      background: url("/SolarOS/Background.png") center/cover no-repeat;
+      filter:saturate(1.05) contrast(1.02);
+      opacity:.22;
+      transform:scale(1.02);
+    }
+
+    /* Soft glow + subtle grain */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
+      background:
+        radial-gradient(680px 420px at 18% 18%, rgba(255,255,255,.08), transparent 62%),
+        radial-gradient(560px 380px at 78% 26%, rgba(255,255,255,.06), transparent 62%),
+        radial-gradient(900px 560px at 50% 86%, rgba(255,255,255,.05), transparent 62%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.010), rgba(255,255,255,.010) 1px, transparent 1px, transparent 3px);
+      mix-blend-mode: screen;
+      opacity:.85;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    a:focus-visible, button:focus-visible{
+      outline: 2px solid rgba(77,163,255,.75);
+      outline-offset: 3px;
+      border-radius: 14px;
+    }
+
+    /* Canvas atrás de tudo */
+    canvas{
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      width:100%;
+      height:100%;
+      display:block;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      gap: 16px;
+    }
+
+    /* NAV pill (mesmo vibe da página de download) */
+    .nav{
+      margin-top: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      position:relative;
+    }
+    .nav::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(900px 260px at 15% 0%, rgba(255,214,90,.18), transparent 60%),
+        radial-gradient(820px 260px at 85% 10%, rgba(77,163,255,.18), transparent 60%),
+        linear-gradient(120deg, rgba(255,255,255,.08), transparent 40%, rgba(255,255,255,.06));
+      opacity:.55;
+      pointer-events:none;
+    }
+    .navInner{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding: 10px 14px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 180px;
+    }
+    .brandLogo{
+      height: 30px;
+      width: auto;
+      max-width: 220px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.10);
+      box-shadow: 0 10px 26px rgba(0,0,0,.30);
+      display:block;
+      object-fit: contain;
+      padding: 4px;
+    }
+    .links{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .link{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.10);
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 12px;
+      letter-spacing: .2px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      white-space:nowrap;
+    }
+    .link:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+    }
+    .cta{
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 12px;
+      color:#0a1220;
+      border: 1px solid rgba(0,0,0,.25);
+      background: linear-gradient(180deg, rgba(255,214,90,.98), rgba(255,174,38,.92));
+      box-shadow: 0 18px 35px rgba(255,214,90,.18);
+      transition: transform .12s ease, filter .12s ease;
+      white-space:nowrap;
+    }
+    .cta:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+
+    /* Card principal */
+    .center{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .card{
+      width:min(860px, 100%);
+      border-radius: var(--r);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+      padding: 22px;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(900px 340px at 14% 0%, rgba(77,163,255,.20), transparent 62%),
+        radial-gradient(900px 340px at 86% 10%, rgba(255,214,90,.18), transparent 62%),
+        linear-gradient(120deg, rgba(255,255,255,.09), transparent 40%, rgba(255,255,255,.06));
+      opacity:.52;
+      pointer-events:none;
+    }
+    .card > *{ position:relative; }
+
+    .topRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap:wrap;
+    }
+
+    .code404{
+      font-size: 78px;
+      line-height: .95;
+      margin: 0;
+      letter-spacing: -1px;
+      background: linear-gradient(180deg, rgba(238,243,255,1), rgba(238,243,255,.68));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 18px 55px rgba(0,0,0,.35);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.16);
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .2px;
+      white-space:nowrap;
+    }
+    .badgeDot{
+      width:9px;height:9px;border-radius:999px;
+      background: linear-gradient(180deg, rgba(77,163,255,1), rgba(77,163,255,.25));
+      box-shadow: 0 0 0 4px rgba(77,163,255,.10);
+      flex:0 0 auto;
+    }
+
+    h1{
+      margin: 10px 0 8px;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+    p{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height:1.6;
+      max-width: 70ch;
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 16px;
+    }
+    .btn{
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      padding: 12px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 13px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.20);
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.26);
+      background: rgba(255,255,255,.08);
+    }
+    .btn.primary{
+      color:#071223;
+      border: 1px solid rgba(0,0,0,.25);
+      background: linear-gradient(180deg, rgba(77,163,255,.98), rgba(77,163,255,.74));
+      box-shadow: 0 18px 38px rgba(77,163,255,.18);
+    }
+    .btn .pill{
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.16);
+      border: 1px solid rgba(255,255,255,.16);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .btn.primary .pill{
+      background: rgba(255,255,255,.24);
+      border-color: rgba(0,0,0,.10);
+      color: rgba(10,18,32,.82);
+    }
+
+    .hint{
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      color: var(--muted2);
+      font-size: 12px;
+      line-height:1.55;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      max-width: 72ch;
+    }
+    .hint b{ color: var(--txt); }
+
+    .footer{
+      text-align:center;
+      color: var(--muted2);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 520px){
+      .code404{ font-size: 64px; }
+      .navInner{ padding: 10px 12px; }
+      .brandLogo{ height: 28px; max-width: 160px; }
+    }
+  </style>
 </head>
+
 <body>
+  <canvas id="stars" aria-hidden="true"></canvas>
 
-<canvas id="stars"></canvas>
+  <div class="wrap">
+    <header class="nav" role="navigation" aria-label="SolarOS">
+      <div class="navInner">
+        <a class="brand" href="/SolarOS/" title="Home">
+          <img class="brandLogo" src="/SolarOS/SolarLogoWithName.png" alt="SolarOS" />
+        </a>
 
-<div class="container">
-    <h1>404</h1>
-    <p>Página não encontrada</p>
-    <a href="/SolarOS/">Voltar ao início</a>
-</div>
+        <div class="links">
+          <a class="link" href="/SolarOS/">Home</a>
+          <a class="link" href="/SolarOS/download/">Downloads</a>
+          <a class="link" href="/SolarOS/about/">About</a>
+          <a class="cta" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Source Code</a>
+        </div>
+      </div>
+    </header>
 
-<script>
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
+    <main class="center">
+      <section class="card" aria-label="Erro 404">
+        <div class="topRow">
+          <p class="code404" aria-label="404">404</p>
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
+          <div class="badge" title="Interação">
+            <span class="badgeDot"></span>
+            Mova o mouse: gravidade
+          </div>
+        </div>
 
-let mouse = { x: canvas.width/2, y: canvas.height/2 };
+        <h1>Página não encontrada</h1>
+        <p>
+          Esse link não existe (ou foi movido). Mas relaxa: você ainda está no universo do SolarOS.
+        </p>
 
-window.addEventListener("mousemove", e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-});
+        <div class="btnRow" role="group" aria-label="Ações">
+          <a class="btn primary" href="/SolarOS/">
+            Voltar ao início <span class="pill">Home</span>
+          </a>
+          <a class="btn" href="/SolarOS/download/">
+            Ir para downloads <span class="pill">Hub</span>
+          </a>
+          <a class="btn" href="javascript:history.back()">
+            Voltar <span class="pill">Browser</span>
+          </a>
+        </div>
 
-// =====================
-// CONFIG FÍSICA
-// =====================
+        <div class="hint" role="note">
+          <span style="width:10px;height:10px;border-radius:999px;background:rgba(255,214,90,.85);box-shadow:0 0 0 4px rgba(255,214,90,.10);margin-top:4px;flex:0 0 auto;"></span>
+          <div>
+            <b>Dica:</b> se você quiser deixar ainda mais “site oficial”, dá pra trocar o texto por algo tipo
+            “Você saiu da órbita” e manter essa mesma estética de vidro.
+          </div>
+        </div>
+      </section>
+    </main>
 
-const G = 800;          // constante gravitacional
-const softening = 100;  // evita singularidade (r mínimo)
-const friction = 0.999; // leve amortecimento
+    <div class="footer">© 2026 Davi Luiz — Licensed under GPL v3</div>
+  </div>
 
-// =====================
+  <script>
+    const canvas = document.getElementById("stars");
+    const ctx = canvas.getContext("2d", { alpha: true });
 
-class Star {
-    constructor() {
-        this.reset();
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let W = 0, H = 0, DPR = 1;
+
+    function resize(){
+      W = window.innerWidth;
+      H = window.innerHeight;
+      DPR = Math.min(2, window.devicePixelRatio || 1);
+
+      canvas.width  = Math.floor(W * DPR);
+      canvas.height = Math.floor(H * DPR);
+      canvas.style.width = W + "px";
+      canvas.style.height = H + "px";
+
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", () => {
+      resize();
+      buildStars();
+    });
+
+    // Mouse / toque
+    const mouse = { x: W * 0.5, y: H * 0.5, tx: W * 0.5, ty: H * 0.5 };
+    function setTarget(x, y){ mouse.tx = x; mouse.ty = y; }
+    window.addEventListener("mousemove", (e) => setTarget(e.clientX, e.clientY), { passive: true });
+    window.addEventListener("touchmove", (e) => {
+      if (!e.touches || !e.touches[0]) return;
+      setTarget(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+
+    // Config
+    const softening = 140;              // evita singularidade
+    const bounce = 0.18;                // colisão suave
+    const baseFriction = 0.992;         // amortecimento
+    const baseG = 950;                  // força "gravidade"
+    const maxSpeed = 6.0;               // trava velocidade
+
+    let stars = [];
+
+    function starCountFor(w, h){
+      // Ajusta sozinho conforme o tamanho da tela (mais leve em telas menores)
+      const density = (w * h) / 6500;
+      return Math.max(220, Math.min(520, Math.floor(density)));
     }
 
-    reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.2;
-        this.vy = (Math.random() - 0.5) * 0.2;
-        this.size = Math.random() * 2 + 1; // 1 a 3 px
+    function rand(min, max){ return min + Math.random() * (max - min); }
+
+    function buildStars(){
+      const count = starCountFor(W, H);
+      stars = new Array(count);
+      for (let i = 0; i < count; i++){
+        stars[i] = {
+          x: rand(0, W),
+          y: rand(0, H),
+          vx: rand(-0.35, 0.35),
+          vy: rand(-0.35, 0.35),
+          s: rand(1.0, 2.6)
+        };
+      }
+    }
+    buildStars();
+
+    let last = performance.now();
+
+    function animate(now){
+      const dt = Math.min(0.033, (now - last) / 1000); // clamp
+      last = now;
+
+      // suaviza o mouse pra ficar “premium”
+      const smooth = 1 - Math.pow(0.0001, dt);
+      mouse.x += (mouse.tx - mouse.x) * smooth;
+      mouse.y += (mouse.ty - mouse.y) * smooth;
+
+      ctx.clearRect(0, 0, W, H);
+
+      if (reduceMotion){
+        // modo "calmo": desenha sem atualizar física
+        for (const st of stars){
+          ctx.fillStyle = "rgba(255,255,255,.9)";
+          ctx.fillRect(st.x, st.y, st.s, st.s);
+        }
+        requestAnimationFrame(animate);
+        return;
+      }
+
+      // friction coerente com fps
+      const friction = Math.pow(baseFriction, dt * 60);
+      const G = baseG;
+
+      for (const st of stars){
+        const dx = mouse.x - st.x;
+        const dy = mouse.y - st.y;
+        const dist2 = dx*dx + dy*dy + softening;
+        const invDist = 1 / Math.sqrt(dist2);
+
+        const force = (G / dist2);
+
+        st.vx += dx * invDist * force * dt * 60;
+        st.vy += dy * invDist * force * dt * 60;
+
+        // limita velocidade
+        const sp = Math.hypot(st.vx, st.vy);
+        if (sp > maxSpeed){
+          const k = maxSpeed / sp;
+          st.vx *= k; st.vy *= k;
+        }
+
+        st.vx *= friction;
+        st.vy *= friction;
+
+        st.x += st.vx;
+        st.y += st.vy;
+
+        // colisões
+        if (st.x < 0){ st.x = 0; st.vx *= -bounce; }
+        if (st.x > W - st.s){ st.x = W - st.s; st.vx *= -bounce; }
+        if (st.y < 0){ st.y = 0; st.vy *= -bounce; }
+        if (st.y > H - st.s){ st.y = H - st.s; st.vy *= -bounce; }
+
+        ctx.fillStyle = "rgba(255,255,255,.9)";
+        ctx.fillRect(st.x, st.y, st.s, st.s);
+      }
+
+      requestAnimationFrame(animate);
     }
 
-    update() {
-    const dx = mouse.x - this.x;
-    const dy = mouse.y - this.y;
-
-    const dist2 = dx*dx + dy*dy + softening;
-
-    const force = G / dist2;
-    const invDist = 1 / Math.sqrt(dist2);
-
-    const ax = dx * invDist * force;
-    const ay = dy * invDist * force;
-
-    this.vx += ax;
-    this.vy += ay;
-
-    this.vx *= friction;
-    this.vy *= friction;
-
-    this.x += this.vx;
-    this.y += this.vy;
-
-    // =========================
-    // COLISÃO COM PAREDES
-    // =========================
-    const bounce = 0.2; // 1 = elástico perfeito
-
-    // Parede esquerda
-    if (this.x <= 0) {
-        this.x = 0;
-        this.vx *= -bounce;
-    }
-
-    // Parede direita
-    if (this.x >= canvas.width - this.size) {
-        this.x = canvas.width - this.size;
-        this.vx *= -bounce;
-    }
-
-    // Parede superior
-    if (this.y <= 0) {
-        this.y = 0;
-        this.vy *= -bounce;
-    }
-
-    // Parede inferior
-    if (this.y >= canvas.height - this.size) {
-        this.y = canvas.height - this.size;
-        this.vy *= -bounce;
-    }
-}
-
-
-    draw() {
-        ctx.fillStyle = "white";
-        ctx.fillRect(this.x, this.y, this.size, this.size);
-    }
-}
-
-const stars = [];
-for (let i = 0; i < 500; i++) {
-    stars.push(new Star());
-}
-
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let star of stars) {
-        star.update();
-        star.draw();
-    }
     requestAnimationFrame(animate);
-}
-
-animate();
-</script>
-
+  </script>
 </body>
 </html>
