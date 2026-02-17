@@ -16,11 +16,7 @@
       --muted:rgba(238,243,255,.74);
       --muted2:rgba(238,243,255,.55);
 
-      --glass:rgba(255,255,255,.07);
       --stroke:rgba(255,255,255,.14);
-
-      --accent1:#4da3ff;
-      --accent2:#ffd65a;
 
       --r:22px;
       --shadow: 0 22px 70px rgba(0,0,0,.52);
@@ -158,7 +154,7 @@
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.10);
-      color: var(--muted);
+      color: rgba(238,243,255,.74);
       font-weight: 850;
       font-size: 12px;
       letter-spacing: .2px;
@@ -218,14 +214,6 @@
     }
     .card > *{ position:relative; }
 
-    .topRow{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 14px;
-      flex-wrap:wrap;
-    }
-
     .code404{
       font-size: 78px;
       line-height: .95;
@@ -238,27 +226,6 @@
       text-shadow: 0 18px 55px rgba(0,0,0,.35);
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.16);
-      color: var(--muted);
-      font-weight: 900;
-      font-size: 12px;
-      letter-spacing: .2px;
-      white-space:nowrap;
-    }
-    .badgeDot{
-      width:9px;height:9px;border-radius:999px;
-      background: linear-gradient(180deg, rgba(77,163,255,1), rgba(77,163,255,.25));
-      box-shadow: 0 0 0 4px rgba(77,163,255,.10);
-      flex:0 0 auto;
-    }
-
     h1{
       margin: 10px 0 8px;
       font-size: 22px;
@@ -266,10 +233,10 @@
     }
     p{
       margin:0;
-      color: var(--muted);
+      color: rgba(238,243,255,.74);
       font-size: 14px;
       line-height:1.6;
-      max-width: 70ch;
+      max-width: 72ch;
     }
 
     .btnRow{
@@ -311,7 +278,7 @@
       border-radius: 999px;
       background: rgba(0,0,0,.16);
       border: 1px solid rgba(255,255,255,.16);
-      color: var(--muted);
+      color: rgba(238,243,255,.74);
       font-size: 11px;
       font-weight: 900;
     }
@@ -321,25 +288,9 @@
       color: rgba(10,18,32,.82);
     }
 
-    .hint{
-      margin-top: 14px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
-      color: var(--muted2);
-      font-size: 12px;
-      line-height:1.55;
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      max-width: 72ch;
-    }
-    .hint b{ color: var(--txt); }
-
     .footer{
       text-align:center;
-      color: var(--muted2);
+      color: rgba(238,243,255,.55);
       font-size: 12px;
       margin-bottom: 10px;
     }
@@ -373,18 +324,12 @@
 
     <main class="center">
       <section class="card" aria-label="404 error">
-        <div class="topRow">
-          <p class="code404" aria-label="404">404</p>
-
-          <div class="badge" title="Interaction">
-            <span class="badgeDot"></span>
-            Move your mouse: gravity
-          </div>
-        </div>
+        <p class="code404" aria-label="404">404</p>
 
         <h1>Page not found</h1>
         <p>
-          This link doesn’t exist (or it was moved). But you’re still inside the SolarOS universe.
+          The page you’re looking for doesn’t exist (or it was moved).
+          If you typed the address, double-check for typos.
         </p>
 
         <div class="btnRow" role="group" aria-label="Actions">
@@ -392,19 +337,11 @@
             Back to home <span class="pill">Home</span>
           </a>
           <a class="btn" href="/SolarOS/download/">
-            Go to downloads <span class="pill">Hub</span>
+            Downloads <span class="pill">Hub</span>
           </a>
           <a class="btn" href="javascript:history.back()">
             Go back <span class="pill">Browser</span>
           </a>
-        </div>
-
-        <div class="hint" role="note">
-          <span style="width:10px;height:10px;border-radius:999px;background:rgba(255,214,90,.85);box-shadow:0 0 0 4px rgba(255,214,90,.10);margin-top:4px;flex:0 0 auto;"></span>
-          <div>
-            <b>Tip:</b> If you want it even more “official”, you can replace the text with something like
-            “You drifted out of orbit” while keeping this glass style.
-          </div>
         </div>
       </section>
     </main>
@@ -438,7 +375,7 @@
       buildStars();
     });
 
-    // Mouse / touch
+    // Mouse / touch target (no on-screen instructions)
     const mouse = { x: W * 0.5, y: H * 0.5, tx: W * 0.5, ty: H * 0.5 };
     function setTarget(x, y){ mouse.tx = x; mouse.ty = y; }
     window.addEventListener("mousemove", (e) => setTarget(e.clientX, e.clientY), { passive: true });
@@ -457,7 +394,6 @@
     let stars = [];
 
     function starCountFor(w, h){
-      // Auto-adjust by screen size (lighter on smaller screens)
       const density = (w * h) / 6500;
       return Math.max(220, Math.min(520, Math.floor(density)));
     }
@@ -482,10 +418,9 @@
     let last = performance.now();
 
     function animate(now){
-      const dt = Math.min(0.033, (now - last) / 1000); // clamp
+      const dt = Math.min(0.033, (now - last) / 1000);
       last = now;
 
-      // Smooth mouse for a more premium feel
       const smooth = 1 - Math.pow(0.0001, dt);
       mouse.x += (mouse.tx - mouse.x) * smooth;
       mouse.y += (mouse.ty - mouse.y) * smooth;
@@ -493,7 +428,6 @@
       ctx.clearRect(0, 0, W, H);
 
       if (reduceMotion){
-        // Calm mode: draw without updating physics
         for (const st of stars){
           ctx.fillStyle = "rgba(255,255,255,.9)";
           ctx.fillRect(st.x, st.y, st.s, st.s);
@@ -502,7 +436,6 @@
         return;
       }
 
-      // Friction consistent across FPS
       const friction = Math.pow(baseFriction, dt * 60);
       const G = baseG;
 
@@ -517,7 +450,6 @@
         st.vx += dx * invDist * force * dt * 60;
         st.vy += dy * invDist * force * dt * 60;
 
-        // Clamp speed
         const sp = Math.hypot(st.vx, st.vy);
         if (sp > maxSpeed){
           const k = maxSpeed / sp;
@@ -530,7 +462,6 @@
         st.x += st.vx;
         st.y += st.vy;
 
-        // Collisions
         if (st.x < 0){ st.x = 0; st.vx *= -bounce; }
         if (st.x > W - st.s){ st.x = W - st.s; st.vx *= -bounce; }
         if (st.y < 0){ st.y = 0; st.vy *= -bounce; }
