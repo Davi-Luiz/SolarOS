@@ -13,7 +13,7 @@
   "hero_lead": "Downloads oficiais e notas de instalação vão aparecer aqui.",
 
   "notice_title": "SolarOS 1.0 ainda não está pronto.",
-  "notice_body": "As builds públicas vão aparecer aqui quando a primeira versão estável estiver disponível.",
+  "notice_body": "As versões públicas vão aparecer aqui quando a primeira versão estável estiver disponível.",
 
   "btn_community": "Comunidade",
   "btn_downloads": "Downloads",
@@ -23,7 +23,7 @@
   "pill_github": "GitHub",
 
   "section_downloads_title": "Downloads",
-  "section_downloads_body": "Ainda não há downloads públicos. Quando o SolarOS 1.0 estiver pronto, esta página vai listar os arquivos de build, notas de versão e passos de instalação.",
+  "section_downloads_body": "Ainda não há downloads públicos. Quando o SolarOS 1.0 estiver pronto, esta página vai listar as versões disponíveis, notas de versão e instruções de instalação."
 
   "tag_dev": "SolarOS 1.0: em desenvolvimento",
   "tag_soon": "Downloads: em breve",
@@ -31,8 +31,8 @@
   "btn_get_updates": "Receber updates",
   "btn_track_progress": "Acompanhar progresso",
 
-  "card_releases_title": "Onde os releases vão aparecer",
-  "card_releases_body": "As builds serão publicadas pelos links oficiais acima (GitHub e Discord). Esta página vai ser sempre o hub permanente de downloads.",
+  "card_releases_title": "Onde os versões vão aparecer",
+  "card_releases_body": "As versões serão publicadas pelos links oficiais acima (GitHub e Discord). Esta página vai ser sempre o hub permanente de downloads.",
 
   "card_quick_title": "Links rápidos",
   "card_quick_body": "Se você quer informações do projeto, use a página Sobre. Para updates, use Discord ou GitHub.",
