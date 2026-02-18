@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="i18n-title" content="page_title_about" />
   <title>SolarOS • About</title>
   <link rel="icon" href="/SolarOS/favicon.ico" />
 
@@ -144,12 +145,28 @@
       font-size: 12px;
       letter-spacing: .2px;
       transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
     }
     .link:hover{
       transform: translateY(-1px);
       border-color: rgba(255,255,255,.22);
       background: rgba(255,255,255,.06);
       color: var(--txt);
+    }
+
+    button.link{
+      appearance:none;
+      -webkit-appearance:none;
+      cursor:pointer;
+      font: inherit;
+    }
+    button.link.active{
+      color: var(--txt);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
     }
 
     .cta{
@@ -340,17 +357,20 @@
     <!-- NAV -->
     <header class="nav">
       <div class="navInner">
-        <a class="brand" href="/SolarOS/" title="Home">
+        <a class="brand" href="/SolarOS/" data-i18n-title="nav_home_title">
           <img class="brandLogo" src="/SolarOS/SolarLogoWithName.png" alt="SolarOS" />
         </a>
 
         <nav class="links" aria-label="Primary">
-          <a class="link" href="/SolarOS/">Home</a>
-          <a class="link" href="/SolarOS/download/">Download</a>
-          <a class="link" href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noreferrer">License</a>
-          <a class="link" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">Community</a>
-          <a class="link" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Source Code</a>
-          <a class="cta" href="/SolarOS/download/">Downloads</a>
+          <a class="link" href="/SolarOS/" data-i18n="nav_home"></a>
+          <a class="link" href="/SolarOS/download/" data-i18n="nav_download"></a>
+          <a class="link" href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noreferrer" data-i18n="nav_license"></a>
+          <a class="link" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer" data-i18n="nav_community"></a>
+          <a class="link" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer" data-i18n="nav_source"></a>
+          <a class="cta" href="/SolarOS/download/" data-i18n="nav_downloads"></a>
+
+          <button class="link" type="button" data-lang="en">EN</button>
+          <button class="link" type="button" data-lang="pt">PT</button>
         </nav>
       </div>
     </header>
@@ -358,23 +378,21 @@
     <!-- HERO -->
     <section class="hero" style="margin-top:16px;">
       <div class="heroInner">
-        <h1>About SolarOS</h1>
-        <p class="lead">
-          SolarOS™ is a custom-built operating system created from scratch with a focus on performance,
-          clean visual design, simple customization, and real-world daily usage.
-        </p>
+        <h1 data-i18n="about_hero_title"></h1>
+        <p class="lead" data-i18n="about_hero_lead"></p>
 
         <div class="notice" role="note" aria-label="Status">
           <span class="dot"></span>
           <div>
-            <strong>Status:</strong> SolarOS 1.0 is not ready yet. Core components are in progress and will expand over time.
+            <strong data-i18n="about_notice_label"></strong>
+            <span data-i18n="about_notice_body"></span>
           </div>
         </div>
 
         <div class="miniRow" style="margin-top:14px;">
-          <a class="btn primary" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer">Community</a>
-          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Source Code</a>
-          <a class="btn" href="/SolarOS/download/">Downloads</a>
+          <a class="btn primary" href="https://discord.gg/3RBkhPtf" target="_blank" rel="noreferrer" data-i18n="about_btn_community"></a>
+          <a class="btn" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer" data-i18n="about_btn_source"></a>
+          <a class="btn" href="/SolarOS/download/" data-i18n="about_btn_downloads"></a>
         </div>
       </div>
     </section>
@@ -382,79 +400,87 @@
     <!-- CONTENT -->
     <section class="grid">
       <div class="card full">
-        <h2>Objective</h2>
-        <p>SolarOS™ aims to be:</p>
+        <h2 data-i18n="about_objective_title"></h2>
+        <p data-i18n="about_objective_intro"></p>
         <ul>
-          <li>Fast</li>
-          <li>Beautiful by default</li>
-          <li>Easy to use</li>
-          <li>Highly configurable</li>
-          <li>Built for real and continuous use</li>
+          <li data-i18n="about_objective_fast"></li>
+          <li data-i18n="about_objective_beautiful"></li>
+          <li data-i18n="about_objective_easy"></li>
+          <li data-i18n="about_objective_configurable"></li>
+          <li data-i18n="about_objective_continuous"></li>
         </ul>
-        <p style="margin-top:10px;">
-          The system evolves over time without losing simplicity.
-        </p>
+        <p style="margin-top:10px;" data-i18n="about_objective_outro"></p>
       </div>
 
       <div class="card">
-        <h2>Key Features</h2>
+        <h2 data-i18n="about_features_title"></h2>
         <ul>
-          <li>Lightweight and fast</li>
-          <li>Well-defined visual interface</li>
-          <li>Modern compression support (JPEG XL / libjxl)</li>
-          <li>Designed for AI integration (SolarAI™)</li>
-          <li>Custom file system (SolarSplash FS™)</li>
-          <li>High user customization level</li>
-          <li>Direct and stable system control</li>
-          <li>No external runtime dependencies</li>
+          <li data-i18n="about_features_1"></li>
+          <li data-i18n="about_features_2"></li>
+          <li data-i18n="about_features_3"></li>
+          <li data-i18n="about_features_4"></li>
+          <li data-i18n="about_features_5"></li>
+          <li data-i18n="about_features_6"></li>
+          <li data-i18n="about_features_7"></li>
+          <li data-i18n="about_features_8"></li>
         </ul>
       </div>
 
       <div class="card">
-        <h2>Architecture Overview</h2>
+        <h2 data-i18n="about_arch_title"></h2>
         <ul>
-          <li><strong>Firmware → SolarBoot™</strong>: initialization, SolarSplash FS™ reading, basic integrity verification, then launches SolarKernel™</li>
-          <li><strong>SolarKernel™</strong>: system execution control, memory management, process management</li>
-          <li><strong>SolarSplash FS™</strong>: no file extensions; types defined by metadata; fixed and organized layout</li>
-          <li><strong>SolarAI™</strong>: planned AI engine for performance, organization, and user adaptation</li>
+          <li>
+            <strong data-i18n="about_arch_firmware_label"></strong>
+            <span data-i18n="about_arch_firmware_desc"></span>
+          </li>
+          <li>
+            <strong data-i18n="about_arch_kernel_label"></strong>
+            <span data-i18n="about_arch_kernel_desc"></span>
+          </li>
+          <li>
+            <strong data-i18n="about_arch_fs_label"></strong>
+            <span data-i18n="about_arch_fs_desc"></span>
+          </li>
+          <li>
+            <strong data-i18n="about_arch_ai_label"></strong>
+            <span data-i18n="about_arch_ai_desc"></span>
+          </li>
         </ul>
       </div>
 
       <div class="card full">
-        <h2>Development Tools</h2>
-        <p>Used only during development:</p>
+        <h2 data-i18n="about_devtools_title"></h2>
+        <p data-i18n="about_devtools_intro"></p>
         <ul>
-          <li>Python (helper tools)</li>
-          <li>QEMU + OVMF (testing)</li>
-          <li>Build scripts</li>
+          <li data-i18n="about_devtools_1"></li>
+          <li data-i18n="about_devtools_2"></li>
+          <li data-i18n="about_devtools_3"></li>
         </ul>
-        <p style="margin-top:10px;">
-          These tools are not part of the running system.
-        </p>
+        <p style="margin-top:10px;" data-i18n="about_devtools_outro"></p>
       </div>
 
       <div class="card full">
-        <h2>Status</h2>
+        <h2 data-i18n="about_status_title"></h2>
         <ul>
-          <li>Functional bootloader</li>
-          <li>Custom bootloader</li>
-          <li>Custom file system</li>
-          <li>Initial kernel</li>
-          <li>Graphical interface</li>
-          <li>Kernel expansion</li>
-          <li>Advanced SolarAI™ integration</li>
+          <li data-i18n="about_status_1"></li>
+          <li data-i18n="about_status_2"></li>
+          <li data-i18n="about_status_3"></li>
+          <li data-i18n="about_status_4"></li>
+          <li data-i18n="about_status_5"></li>
+          <li data-i18n="about_status_6"></li>
+          <li data-i18n="about_status_7"></li>
         </ul>
       </div>
 
       <div class="card full">
-        <h2>Author</h2>
+        <h2 data-i18n="about_author_title"></h2>
         <p>Davi Luiz</p>
       </div>
     </section>
 
-    <div class="footer">
-      © 2026 Davi Luiz — Licensed under GPL v3
-    </div>
+    <div class="footer" data-i18n="footer"></div>
   </div>
+
+  <script src="/SolarOS/js/i18n.js"></script>
 </body>
 </html>
