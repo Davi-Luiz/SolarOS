@@ -100,5 +100,14 @@
   "about_status_6": "Expansão do kernel",
   "about_status_7": "Integração avançada do SolarAI™",
 
-  "about_author_title": "Autor"
+  "about_author_title": "Autor",
+  "page_title_404": "404 • SolarOS",
+  "err_404_title": "Página não encontrada",
+  "err_404_body": "A página que você procura não existe (ou foi movida). Se você digitou o endereço, confira se não tem erro.",
+  "err_404_btn_home": "Voltar para o início",
+  "err_404_btn_downloads": "Downloads",
+  "err_404_btn_back": "Voltar",
+  "pill_home": "Início",
+  "pill_hub": "Hub",
+  "pill_browser": "Navegador"
 }
