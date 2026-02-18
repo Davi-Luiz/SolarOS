@@ -100,5 +100,14 @@
   "about_status_6": "Kernel expansion",
   "about_status_7": "Advanced SolarAI™ integration",
 
-  "about_author_title": "Author"
+  "about_author_title": "Author",
+  "page_title_404": "404 • SolarOS",
+  "err_404_title": "Page not found",
+  "err_404_body": "The page you are looking for does not exist (or it was moved). If you typed the address, double-check for typos.",
+  "err_404_btn_home": "Back to home",
+  "err_404_btn_downloads": "Downloads",
+  "err_404_btn_back": "Go back",
+  "pill_home": "Home",
+  "pill_hub": "Hub",
+  "pill_browser": "Browser"
 }
