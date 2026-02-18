@@ -42,4 +42,63 @@
   "quick_github": "GitHub",
 
   "footer": "© 2026 Davi Luiz — Licensed under GPL v3"
+  
+  "nav_download": "Download",
+  "page_title_about": "SolarOS • About",
+
+  "about_hero_title": "About SolarOS",
+  "about_hero_lead": "SolarOS™ is a custom-built operating system created from scratch with a focus on performance, clean visual design, simple customization, and real-world daily usage.",
+  "about_notice_label": "Status: ",
+  "about_notice_body": "SolarOS 1.0 is not ready yet. Core components are in progress and will expand over time.",
+
+  "about_btn_community": "Community",
+  "about_btn_source": "Source Code",
+  "about_btn_downloads": "Downloads",
+
+  "about_objective_title": "Objective",
+  "about_objective_intro": "SolarOS™ aims to be:",
+  "about_objective_fast": "Fast",
+  "about_objective_beautiful": "Beautiful by default",
+  "about_objective_easy": "Easy to use",
+  "about_objective_configurable": "Highly configurable",
+  "about_objective_continuous": "Built for real and continuous use",
+  "about_objective_outro": "The system evolves over time without losing simplicity.",
+
+  "about_features_title": "Key Features",
+  "about_features_1": "Lightweight and fast",
+  "about_features_2": "Well-defined visual interface",
+  "about_features_3": "Modern compression support (JPEG XL / libjxl)",
+  "about_features_4": "Designed for AI integration (SolarAI™)",
+  "about_features_5": "Custom file system (SolarSplash FS™)",
+  "about_features_6": "High user customization level",
+  "about_features_7": "Direct and stable system control",
+  "about_features_8": "No external runtime dependencies",
+
+  "about_arch_title": "Architecture Overview",
+  "about_arch_firmware_label": "Firmware → SolarBoot™: ",
+  "about_arch_firmware_desc": "initialization, SolarSplash FS™ reading, basic integrity verification, then launches SolarKernel™",
+  "about_arch_kernel_label": "SolarKernel™: ",
+  "about_arch_kernel_desc": "system execution control, memory management, process management",
+  "about_arch_fs_label": "SolarSplash FS™: ",
+  "about_arch_fs_desc": "no file extensions; types defined by metadata; fixed and organized layout",
+  "about_arch_ai_label": "SolarAI™: ",
+  "about_arch_ai_desc": "planned AI engine for performance, organization, and user adaptation",
+
+  "about_devtools_title": "Development Tools",
+  "about_devtools_intro": "Used only during development:",
+  "about_devtools_1": "Python (helper tools)",
+  "about_devtools_2": "QEMU + OVMF (testing)",
+  "about_devtools_3": "Build scripts",
+  "about_devtools_outro": "These tools are not part of the running system.",
+
+  "about_status_title": "Status",
+  "about_status_1": "Functional bootloader",
+  "about_status_2": "Custom bootloader",
+  "about_status_3": "Custom file system",
+  "about_status_4": "Initial kernel",
+  "about_status_5": "Graphical interface",
+  "about_status_6": "Kernel expansion",
+  "about_status_7": "Advanced SolarAI™ integration",
+
+  "about_author_title": "Author"
 }
