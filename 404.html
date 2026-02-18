@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#05070d" />
+  <meta name="i18n-title" content="page_title_404" />
   <title>404 • SolarOS</title>
   <link rel="icon" href="/SolarOS/favicon.ico" />
 
@@ -37,7 +38,6 @@
       overflow:hidden;
     }
 
-    /* Background image (optional) */
     body::before{
       content:"";
       position:fixed;
@@ -49,7 +49,6 @@
       transform:scale(1.02);
     }
 
-    /* Soft glow + subtle grain */
     body::after{
       content:"";
       position:fixed;
@@ -72,7 +71,6 @@
       border-radius: 14px;
     }
 
-    /* Canvas behind everything */
     canvas{
       position:fixed;
       inset:0;
@@ -92,7 +90,6 @@
       gap: 16px;
     }
 
-    /* NAV pill */
     .nav{
       margin-top: 10px;
       border-radius: 999px;
@@ -160,6 +157,9 @@
       letter-spacing: .2px;
       transition: transform .12s ease, border-color .12s ease, background .12s ease;
       white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
     }
     .link:hover{
       transform: translateY(-1px);
@@ -167,6 +167,19 @@
       background: rgba(255,255,255,.06);
       color: var(--txt);
     }
+
+    button.link{
+      appearance:none;
+      -webkit-appearance:none;
+      cursor:pointer;
+      font: inherit;
+    }
+    button.link.active{
+      color: var(--txt);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
+    }
+
     .cta{
       padding: 10px 14px;
       border-radius: 999px;
@@ -182,7 +195,6 @@
     }
     .cta:hover{ transform: translateY(-1px); filter: brightness(1.02); }
 
-    /* Main card */
     .center{
       flex:1;
       display:flex;
@@ -309,15 +321,18 @@
   <div class="wrap">
     <header class="nav" role="navigation" aria-label="SolarOS">
       <div class="navInner">
-        <a class="brand" href="/SolarOS/" title="Home">
+        <a class="brand" href="/SolarOS/" data-i18n-title="nav_home_title">
           <img class="brandLogo" src="/SolarOS/SolarLogoWithName.png" alt="SolarOS" />
         </a>
 
         <div class="links">
-          <a class="link" href="/SolarOS/">Home</a>
-          <a class="link" href="/SolarOS/download/">Downloads</a>
-          <a class="link" href="/SolarOS/about/">About</a>
-          <a class="cta" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer">Source Code</a>
+          <a class="link" href="/SolarOS/" data-i18n="nav_home"></a>
+          <a class="link" href="/SolarOS/download/" data-i18n="nav_downloads"></a>
+          <a class="link" href="/SolarOS/about/" data-i18n="nav_about"></a>
+          <a class="cta" href="https://github.com/Davi-Luiz/SolarOS" target="_blank" rel="noreferrer" data-i18n="nav_source"></a>
+
+          <button class="link" type="button" data-lang="en">EN</button>
+          <button class="link" type="button" data-lang="pt">PT</button>
         </div>
       </div>
     </header>
@@ -326,28 +341,30 @@
       <section class="card" aria-label="404 error">
         <p class="code404" aria-label="404">404</p>
 
-        <h1>Page not found</h1>
-        <p>
-          The page you’re looking for doesn’t exist (or it was moved).
-          If you typed the address, double-check for typos.
-        </p>
+        <h1 data-i18n="err_404_title"></h1>
+        <p data-i18n="err_404_body"></p>
 
         <div class="btnRow" role="group" aria-label="Actions">
           <a class="btn primary" href="/SolarOS/">
-            Back to home <span class="pill">Home</span>
+            <span data-i18n="err_404_btn_home"></span>
+            <span class="pill" data-i18n="pill_home"></span>
           </a>
           <a class="btn" href="/SolarOS/download/">
-            Downloads <span class="pill">Hub</span>
+            <span data-i18n="err_404_btn_downloads"></span>
+            <span class="pill" data-i18n="pill_hub"></span>
           </a>
           <a class="btn" href="javascript:history.back()">
-            Go back <span class="pill">Browser</span>
+            <span data-i18n="err_404_btn_back"></span>
+            <span class="pill" data-i18n="pill_browser"></span>
           </a>
         </div>
       </section>
     </main>
 
-    <div class="footer">© 2026 Davi Luiz — Licensed under GPL v3</div>
+    <div class="footer" data-i18n="footer"></div>
   </div>
+
+  <script src="/SolarOS/js/i18n.js"></script>
 
   <script>
     const canvas = document.getElementById("stars");
@@ -375,7 +392,6 @@
       buildStars();
     });
 
-    // Mouse / touch target (no on-screen instructions)
     const mouse = { x: W * 0.5, y: H * 0.5, tx: W * 0.5, ty: H * 0.5 };
     function setTarget(x, y){ mouse.tx = x; mouse.ty = y; }
     window.addEventListener("mousemove", (e) => setTarget(e.clientX, e.clientY), { passive: true });
@@ -384,12 +400,11 @@
       setTarget(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
-    // Config
-    const softening = 140;              // avoids singularity
-    const bounce = 0.18;                // soft wall collision
-    const baseFriction = 0.992;         // damping
-    const baseG = 950;                  // "gravity" strength
-    const maxSpeed = 6.0;               // speed clamp
+    const softening = 140;
+    const bounce = 0.18;
+    const baseFriction = 0.992;
+    const baseG = 950;
+    const maxSpeed = 6.0;
 
     let stars = [];
 
