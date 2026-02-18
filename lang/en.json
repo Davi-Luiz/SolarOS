@@ -1,0 +1,45 @@
+{
+  "page_title": "SolarOS • Download",
+  "nav_home_title": "Home",
+  "nav_home": "Home",
+  "nav_solar_ai": "Solar AI",
+  "nav_about": "About",
+  "nav_license": "License",
+  "nav_community": "Community",
+  "nav_source": "Source Code",
+  "nav_downloads": "Downloads",
+
+  "hero_title": "Download SolarOS",
+  "hero_lead": "Official downloads and install notes will appear here.",
+
+  "notice_title": "SolarOS 1.0 is not ready yet.",
+  "notice_body": "Public builds will be published here when the first stable release is available.",
+
+  "btn_community": "Community",
+  "btn_downloads": "Downloads",
+  "btn_source": "Source Code",
+  "pill_discord": "Discord",
+  "pill_below": "below",
+  "pill_github": "GitHub",
+
+  "section_downloads_title": "Downloads",
+  "section_downloads_body": "No public downloads yet. When SolarOS 1.0 is ready, this page will list the build files, version notes, and installation steps.",
+
+  "tag_dev": "SolarOS 1.0: in development",
+  "tag_soon": "Downloads: coming soon",
+
+  "btn_get_updates": "Get updates",
+  "btn_track_progress": "Track progress",
+
+  "card_releases_title": "Where releases will be posted",
+  "card_releases_body": "Builds will be published through the official links above (GitHub and Discord). This page will always be the permanent download hub.",
+
+  "card_quick_title": "Quick links",
+  "card_quick_body": "If you’re looking for project info, use the About page. For updates, use Discord or GitHub.",
+
+  "quick_about": "About",
+  "quick_discord": "Discord",
+  "quick_github": "GitHub",
+
+  "footer": "© 2026 Davi Luiz — Licensed under GPL v3"
+}
