@@ -15,11 +15,7 @@
       --muted:rgba(238,243,255,.74);
       --muted2:rgba(238,243,255,.55);
 
-      --glass:rgba(255,255,255,.07);
       --stroke:rgba(255,255,255,.14);
-
-      --accent1:#4da3ff;
-      --accent2:#ffd65a;
 
       --r:22px;
       --shadow: 0 22px 70px rgba(0,0,0,.52);
@@ -40,7 +36,6 @@
       overflow-x:hidden;
     }
 
-    /* fundo */
     body::before{
       content:"";
       position:fixed;
@@ -67,7 +62,7 @@
     }
 
     a{ color:inherit; text-decoration:none; }
-    a:focus-visible, button:focus-visible, textarea:focus-visible, select:focus-visible{
+    a:focus-visible, button:focus-visible, textarea:focus-visible{
       outline: 2px solid rgba(77,163,255,.75);
       outline-offset: 3px;
       border-radius: 14px;
@@ -91,17 +86,6 @@
       -webkit-backdrop-filter: blur(18px);
       box-shadow: var(--shadow2);
       overflow:hidden;
-    }
-    .nav::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(900px 260px at 15% 0%, rgba(255,214,90,.18), transparent 60%),
-        radial-gradient(820px 260px at 85% 10%, rgba(77,163,255,.18), transparent 60%),
-        linear-gradient(120deg, rgba(255,255,255,.08), transparent 40%, rgba(255,255,255,.06));
-      opacity:.55;
-      pointer-events:none;
     }
     .navInner{
       position:relative;
@@ -143,7 +127,7 @@
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.10);
-      color: var(--muted);
+      color: rgba(238,243,255,.74);
       font-weight: 850;
       font-size: 12px;
       letter-spacing: .2px;
@@ -186,7 +170,7 @@
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.12);
-      color: var(--muted);
+      color: rgba(238,243,255,.74);
       font-weight: 900;
       font-size: 12px;
       letter-spacing: .2px;
@@ -222,17 +206,6 @@
       overflow:hidden;
       padding: 16px;
     }
-    .panel::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(680px 240px at 20% 0%, rgba(77,163,255,.16), transparent 62%),
-        radial-gradient(680px 240px at 85% 10%, rgba(255,214,90,.12), transparent 62%);
-      opacity:.35;
-      pointer-events:none;
-    }
-    .panel > *{ position:relative; }
 
     .panel h2{
       margin:0 0 8px;
@@ -241,7 +214,7 @@
     }
     .panel p{
       margin:0 0 12px;
-      color: var(--muted);
+      color: rgba(238,243,255,.74);
       font-size: 13px;
       line-height:1.55;
     }
@@ -272,18 +245,6 @@
       align-items:center;
       flex-wrap: wrap;
       justify-content:flex-end;
-    }
-    select{
-      appearance:none;
-      -webkit-appearance:none;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      color: var(--txt);
-      font-weight: 850;
-      font-size: 12px;
-      letter-spacing: .2px;
     }
     .ghostBtn{
       border: 1px solid rgba(255,255,255,.14);
@@ -395,7 +356,7 @@
     .footer{
       margin: 18px 0 6px;
       text-align:center;
-      color: var(--muted2);
+      color: rgba(238,243,255,.55);
       font-size: 12px;
     }
 
@@ -450,6 +411,7 @@
           </div>
 
           <div class="chatControls">
+            <button class="ghostBtn" id="newChatBtn" type="button">New chat</button>
             <button class="ghostBtn" id="clearBtn" type="button">
               <span data-i18n="ai_clear"></span>
             </button>
@@ -466,7 +428,6 @@
         </div>
       </div>
 
-      <!-- strings pro JS (i18n preenche e o JS lê) -->
       <span class="sr" id="t_checking" data-i18n="ai_status_checking"></span>
       <span class="sr" id="t_online" data-i18n="ai_status_online"></span>
       <span class="sr" id="t_offline" data-i18n="ai_status_offline"></span>
@@ -481,10 +442,8 @@
   <script src="/SolarOS/js/i18n.js"></script>
 
   <script>
-    // API (HTTPS)
     const API_BASE = "https://api-solarai.duckdns.org";
 
-    // UI
     const apiStatus = document.getElementById("apiStatus");
     const apiStatusText = document.getElementById("apiStatusText");
 
@@ -492,8 +451,8 @@
     const promptEl = document.getElementById("prompt");
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
+    const newChatBtn = document.getElementById("newChatBtn");
 
-    // strings (i18n.js preenche)
     const T = {
       checking: document.getElementById("t_checking"),
       online: document.getElementById("t_online"),
@@ -502,6 +461,13 @@
       errorMsg: document.getElementById("t_error_msg"),
       placeholder: document.getElementById("t_placeholder"),
     };
+
+    const SESSION_KEY = "solarai_session_id";
+    let sessionId = localStorage.getItem(SESSION_KEY);
+    if (!sessionId) {
+      sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
+      localStorage.setItem(SESSION_KEY, sessionId);
+    }
 
     let isStreaming = false;
 
@@ -528,6 +494,23 @@
       return div;
     }
 
+    function detectLanguage(){
+      const docLang = (document.documentElement.lang || "").toLowerCase();
+      if (docLang.startsWith("pt")) return "pt";
+      if (docLang.startsWith("en")) return "en";
+
+      const nav = (navigator.language || "en").toLowerCase();
+      return nav.startsWith("pt") ? "pt" : "en";
+    }
+
+    function nowString(){
+      try{
+        return new Date().toLocaleString();
+      }catch(_){
+        return "unavailable";
+      }
+    }
+
     async function checkHealth(){
       setStatus("checking");
 
@@ -539,8 +522,6 @@
         clearTimeout(t);
 
         if(res.ok){
-          // geralmente: {"status":"ok","model_loaded":true}
-          // se falhar parse, só considera ok mesmo assim
           try{
             const j = await res.json();
             if(j && j.status === "ok"){
@@ -559,15 +540,6 @@
       return false;
     }
 
-function getLanguageToSend(){
-  // Prioridade: <html lang="..."> (se teu i18n.js define) -> navegador
-  const docLang = (document.documentElement.lang || "").toLowerCase();
-  if (docLang.startsWith("pt")) return "pt";
-  if (docLang.startsWith("en")) return "en";
-
-  const nav = (navigator.language || "en").toLowerCase();
-  return nav.startsWith("pt") ? "pt" : "en";
-}
     async function send(){
       if(isStreaming) return;
 
@@ -583,9 +555,10 @@ function getLanguageToSend(){
         return;
       }
 
-      const language = getLanguageToSend();
-      const aiBubble = addBubble("", "ai");
+      const language = detectLanguage();
+      const data_e_hora = nowString();
 
+      const aiBubble = addBubble("", "ai");
       isStreaming = true;
       sendBtn.disabled = true;
 
@@ -593,7 +566,14 @@ function getLanguageToSend(){
         const res = await fetch(API_BASE + "/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt, language })
+          body: JSON.stringify({
+            prompt,
+            language,
+            data_e_hora,
+            stream: true,
+            session_id: sessionId,
+            max_tokens: 500
+          })
         });
 
         if(!res.ok || !res.body){
@@ -625,9 +605,17 @@ function getLanguageToSend(){
       promptEl.placeholder = ph;
     }
 
+    function newChat(){
+      chatArea.innerHTML = "";
+      sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
+      localStorage.setItem(SESSION_KEY, sessionId);
+    }
+
     // events
     sendBtn.addEventListener("click", send);
     clearBtn.addEventListener("click", () => { chatArea.innerHTML = ""; });
+    newChatBtn.addEventListener("click", newChat);
+
     promptEl.addEventListener("keydown", (e) => {
       if(e.key === "Enter" && !e.shiftKey){
         e.preventDefault();
@@ -641,7 +629,6 @@ function getLanguageToSend(){
       applyPlaceholder();
       checkHealth();
     }, 60);
-
     setInterval(checkHealth, 15000);
   </script>
 </body>
