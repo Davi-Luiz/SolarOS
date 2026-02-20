@@ -437,198 +437,152 @@
 
     <div class="footer" data-i18n="footer"></div>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
   <script src="/SolarOS/js/i18n.js"></script>
 
   <script>
-    const API_BASE = "https://api-solarai.duckdns.org";
-
-    const apiStatus = document.getElementById("apiStatus");
-    const apiStatusText = document.getElementById("apiStatusText");
-
-    const chatArea = document.getElementById("chatArea");
-    const promptEl = document.getElementById("prompt");
-    const sendBtn = document.getElementById("sendBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const newChatBtn = document.getElementById("newChatBtn");
-
-    const T = {
-      checking: document.getElementById("t_checking"),
-      online: document.getElementById("t_online"),
-      offline: document.getElementById("t_offline"),
-      offlineMsg: document.getElementById("t_offline_msg"),
-      errorMsg: document.getElementById("t_error_msg"),
-      placeholder: document.getElementById("t_placeholder"),
-    };
-
-    const SESSION_KEY = "solarai_session_id";
-    let sessionId = localStorage.getItem(SESSION_KEY);
-    if (!sessionId) {
-      sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
-      localStorage.setItem(SESSION_KEY, sessionId);
+  const API_BASE = "https://api-solarai.duckdns.org";
+  
+  const apiStatus = document.getElementById("apiStatus");
+  const apiStatusText = document.getElementById("apiStatusText");
+  
+  const chatArea = document.getElementById("chatArea");
+  const promptEl = document.getElementById("prompt");
+  const sendBtn = document.getElementById("sendBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const newChatBtn = document.getElementById("newChatBtn");
+  
+  const SESSION_KEY = "solarai_session_id";
+  let sessionId = localStorage.getItem(SESSION_KEY);
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    localStorage.setItem(SESSION_KEY, sessionId);
+  }
+  
+  let isStreaming = false;
+  
+  function setStatus(state){
+    apiStatus.classList.remove("online","offline");
+    if(state === "online"){
+      apiStatus.classList.add("online");
+      apiStatusText.textContent = "Online";
+    }else if(state === "offline"){
+      apiStatus.classList.add("offline");
+      apiStatusText.textContent = "Offline";
+    }else{
+      apiStatus.classList.add("offline");
+      apiStatusText.textContent = "Checking...";
     }
-
-    let isStreaming = false;
-
-    function setStatus(state){
-      apiStatus.classList.remove("online","offline");
-      if(state === "online"){
-        apiStatus.classList.add("online");
-        apiStatusText.textContent = T.online.textContent || "Online";
-      }else if(state === "offline"){
-        apiStatus.classList.add("offline");
-        apiStatusText.textContent = T.offline.textContent || "Offline";
-      }else{
-        apiStatus.classList.add("offline");
-        apiStatusText.textContent = T.checking.textContent || "Checking...";
-      }
-    }
-
-    function addBubble(text, who){
-      const div = document.createElement("div");
-      div.className = "bubble " + who;
+  }
+  
+  function renderMarkdown(text){
+    const raw = marked.parse(text);
+    return DOMPurify.sanitize(raw);
+  }
+  
+  function addBubble(text, who){
+    const div = document.createElement("div");
+    div.className = "bubble " + who;
+  
+    if(who === "ai"){
+      div.innerHTML = renderMarkdown(text);
+    }else{
       div.textContent = text;
-      chatArea.appendChild(div);
-      chatArea.scrollTop = chatArea.scrollHeight;
-      return div;
     }
-
-    function detectLanguage(){
-      const docLang = (document.documentElement.lang || "").toLowerCase();
-      if (docLang.startsWith("pt")) return "pt";
-      if (docLang.startsWith("en")) return "en";
-
-      const nav = (navigator.language || "en").toLowerCase();
-      return nav.startsWith("pt") ? "pt" : "en";
-    }
-
-    function nowString(){
-      try{
-        return new Date().toLocaleString();
-      }catch(_){
-        return "unavailable";
+  
+    chatArea.appendChild(div);
+    chatArea.scrollTop = chatArea.scrollHeight;
+    return div;
+  }
+  
+  async function checkHealth(){
+    try{
+      const res = await fetch(API_BASE + "/health");
+      if(res.ok){
+        setStatus("online");
+        return true;
       }
+    }catch(e){}
+    setStatus("offline");
+    return false;
+  }
+  
+  async function send(){
+    if(isStreaming) return;
+  
+    const prompt = promptEl.value.trim();
+    if(!prompt) return;
+  
+    addBubble(prompt, "user");
+    promptEl.value = "";
+  
+    const online = await checkHealth();
+    if(!online){
+      addBubble("SolarAI is offline.", "ai");
+      return;
     }
-
-    async function checkHealth(){
-      setStatus("checking");
-
-      const controller = new AbortController();
-      const t = setTimeout(() => controller.abort(), 2000);
-
-      try{
-        const res = await fetch(API_BASE + "/health", { signal: controller.signal });
-        clearTimeout(t);
-
-        if(res.ok){
-          try{
-            const j = await res.json();
-            if(j && j.status === "ok"){
-              setStatus("online");
-              return true;
-            }
-          }catch(_){}
-          setStatus("online");
-          return true;
+  
+    const aiBubble = addBubble("", "ai");
+    let buffer = "";
+  
+    isStreaming = true;
+    sendBtn.disabled = true;
+  
+    try{
+      const res = await fetch(API_BASE + "/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          stream: true,
+          session_id: sessionId,
+          max_tokens: 500
+        })
+      });
+  
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+  
+      while(true){
+        const { value, done } = await reader.read();
+        if(done) break;
+  
+        if(value){
+          buffer += decoder.decode(value, { stream: true });
+          aiBubble.innerHTML = renderMarkdown(buffer);
+          chatArea.scrollTop = chatArea.scrollHeight;
         }
-      }catch(e){
-        clearTimeout(t);
       }
-
-      setStatus("offline");
-      return false;
+  
+    }catch(e){
+      aiBubble.innerHTML = renderMarkdown("Request failed.");
     }
-
-    async function send(){
-      if(isStreaming) return;
-
-      const prompt = (promptEl.value || "").trim();
-      if(!prompt) return;
-
-      addBubble(prompt, "user");
-      promptEl.value = "";
-
-      const online = await checkHealth();
-      if(!online){
-        addBubble(T.offlineMsg.textContent || "SolarAI is offline right now.", "ai");
-        return;
-      }
-
-      const language = detectLanguage();
-      const data_e_hora = nowString();
-
-      const aiBubble = addBubble("", "ai");
-      isStreaming = true;
-      sendBtn.disabled = true;
-
-      try{
-        const res = await fetch(API_BASE + "/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt,
-            language,
-            data_e_hora,
-            stream: true,
-            session_id: sessionId,
-            max_tokens: 500
-          })
-        });
-
-        if(!res.ok || !res.body){
-          aiBubble.textContent = (T.errorMsg.textContent || "Request failed.") + " (" + res.status + ")";
-          return;
-        }
-
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-
-        while(true){
-          const { value, done } = await reader.read();
-          if(done) break;
-          if(value){
-            aiBubble.textContent += decoder.decode(value, { stream: true });
-            chatArea.scrollTop = chatArea.scrollHeight;
-          }
-        }
-      }catch(e){
-        aiBubble.textContent = T.errorMsg.textContent || "Request failed.";
-      }finally{
-        isStreaming = false;
-        sendBtn.disabled = false;
-      }
+  
+    isStreaming = false;
+    sendBtn.disabled = false;
+  }
+  
+  function newChat(){
+    chatArea.innerHTML = "";
+    sessionId = crypto.randomUUID();
+    localStorage.setItem(SESSION_KEY, sessionId);
+  }
+  
+  sendBtn.addEventListener("click", send);
+  clearBtn.addEventListener("click", () => chatArea.innerHTML = "");
+  newChatBtn.addEventListener("click", newChat);
+  
+  promptEl.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      send();
     }
-
-    function applyPlaceholder(){
-      const ph = T.placeholder.textContent || "Type your message...";
-      promptEl.placeholder = ph;
-    }
-
-    function newChat(){
-      chatArea.innerHTML = "";
-      sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
-      localStorage.setItem(SESSION_KEY, sessionId);
-    }
-
-    // events
-    sendBtn.addEventListener("click", send);
-    clearBtn.addEventListener("click", () => { chatArea.innerHTML = ""; });
-    newChatBtn.addEventListener("click", newChat);
-
-    promptEl.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" && !e.shiftKey){
-        e.preventDefault();
-        send();
-      }
-    });
-
-    // init
-    setStatus("checking");
-    setTimeout(() => {
-      applyPlaceholder();
-      checkHealth();
-    }, 60);
-    setInterval(checkHealth, 15000);
+  });
+  
+  setStatus("checking");
+  setTimeout(checkHealth, 100);
+  setInterval(checkHealth, 15000);
   </script>
 </body>
 </html>
