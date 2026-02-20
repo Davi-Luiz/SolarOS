@@ -10,13 +10,10 @@
     :root{
       --bg0:#05070d;
       --bg1:#081226;
-
       --txt:#eef3ff;
       --muted:rgba(238,243,255,.74);
       --muted2:rgba(238,243,255,.55);
-
       --stroke:rgba(255,255,255,.14);
-
       --r:22px;
       --shadow: 0 22px 70px rgba(0,0,0,.52);
       --shadow2: 0 10px 35px rgba(0,0,0,.32);
@@ -68,13 +65,8 @@
       border-radius: 14px;
     }
 
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 22px;
-    }
+    .wrap{ max-width: 980px; margin: 0 auto; padding: 22px; }
 
-    /* NAVBAR */
     .nav{
       position: sticky;
       top: 14px;
@@ -96,12 +88,7 @@
       padding: 10px 14px;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width: 200px;
-    }
+    .brand{ display:flex; align-items:center; gap:12px; min-width: 200px; }
     .brandLogo{
       height: 35px;
       width: auto;
@@ -164,7 +151,6 @@
     }
     .cta:hover{ transform: translateY(-1px); filter: brightness(1.02); }
 
-    /* status pill */
     .status{
       padding: 10px 12px;
       border-radius: 999px;
@@ -193,7 +179,6 @@
       box-shadow: 0 0 0 4px rgba(255,120,120,.12);
     }
 
-    /* CHAT CARD */
     .panel{
       margin-top: 16px;
       border-radius: var(--r);
@@ -207,17 +192,8 @@
       padding: 16px;
     }
 
-    .panel h2{
-      margin:0 0 8px;
-      font-size: 16px;
-      letter-spacing:.2px;
-    }
-    .panel p{
-      margin:0 0 12px;
-      color: rgba(238,243,255,.74);
-      font-size: 13px;
-      line-height:1.55;
-    }
+    .panel h2{ margin:0 0 8px; font-size: 16px; letter-spacing:.2px; }
+    .panel p{ margin:0 0 12px; color: rgba(238,243,255,.74); font-size: 13px; line-height:1.55; }
 
     .anchor{ scroll-margin-top: 92px; }
 
@@ -353,12 +329,7 @@
       border:0;
     }
 
-    .footer{
-      margin: 18px 0 6px;
-      text-align:center;
-      color: rgba(238,243,255,.55);
-      font-size: 12px;
-    }
+    .footer{ margin: 18px 0 6px; text-align:center; color: rgba(238,243,255,.55); font-size: 12px; }
 
     @media (max-width: 980px){
       .navInner{ padding: 10px 12px; }
@@ -375,7 +346,6 @@
 
 <body>
   <div class="wrap">
-
     <header class="nav">
       <div class="navInner">
         <a class="brand" href="/SolarOS/" data-i18n-title="nav_home_title">
@@ -437,152 +407,305 @@
 
     <div class="footer" data-i18n="footer"></div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
   <script src="/SolarOS/js/i18n.js"></script>
 
   <script>
-  const API_BASE = "https://api-solarai.duckdns.org";
-  
-  const apiStatus = document.getElementById("apiStatus");
-  const apiStatusText = document.getElementById("apiStatusText");
-  
-  const chatArea = document.getElementById("chatArea");
-  const promptEl = document.getElementById("prompt");
-  const sendBtn = document.getElementById("sendBtn");
-  const clearBtn = document.getElementById("clearBtn");
-  const newChatBtn = document.getElementById("newChatBtn");
-  
-  const SESSION_KEY = "solarai_session_id";
-  let sessionId = localStorage.getItem(SESSION_KEY);
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-    localStorage.setItem(SESSION_KEY, sessionId);
-  }
-  
-  let isStreaming = false;
-  
-  function setStatus(state){
-    apiStatus.classList.remove("online","offline");
-    if(state === "online"){
-      apiStatus.classList.add("online");
-      apiStatusText.textContent = "Online";
-    }else if(state === "offline"){
-      apiStatus.classList.add("offline");
-      apiStatusText.textContent = "Offline";
-    }else{
-      apiStatus.classList.add("offline");
-      apiStatusText.textContent = "Checking...";
+  (() => {
+    "use strict";
+
+    const API_BASE = "https://api-solarai.duckdns.org";
+    const REQUEST_TIMEOUT_MS = 180000;
+    const HEALTH_TIMEOUT_MS = 7000;
+    const MAX_TOKENS = 500;
+
+    const SESSION_KEY = "solarai_session_id";
+    const TOKEN_KEY = "solarai_api_token";
+    const LANG_KEY = "solarai_language";
+
+    const apiStatus = document.getElementById("apiStatus");
+    const apiStatusText = document.getElementById("apiStatusText");
+
+    const chatArea = document.getElementById("chatArea");
+    const promptEl = document.getElementById("prompt");
+    const sendBtn = document.getElementById("sendBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const newChatBtn = document.getElementById("newChatBtn");
+
+    let isStreaming = false;
+    let sessionId = loadOrCreateSessionId();
+    let pendingReset = false;
+
+    function t(id, fallback) {
+      const el = document.getElementById(id);
+      const txt = (el && el.textContent ? el.textContent : "").trim();
+      return txt || fallback;
     }
-  }
-  
-  function renderMarkdown(text){
-    const raw = marked.parse(text);
-    return DOMPurify.sanitize(raw);
-  }
-  
-  function addBubble(text, who){
-    const div = document.createElement("div");
-    div.className = "bubble " + who;
-  
-    if(who === "ai"){
-      div.innerHTML = renderMarkdown(text);
-    }else{
-      div.textContent = text;
-    }
-  
-    chatArea.appendChild(div);
-    chatArea.scrollTop = chatArea.scrollHeight;
-    return div;
-  }
-  
-  async function checkHealth(){
-    try{
-      const res = await fetch(API_BASE + "/health");
-      if(res.ok){
-        setStatus("online");
-        return true;
+
+    function makeSessionId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
       }
-    }catch(e){}
-    setStatus("offline");
-    return false;
-  }
-  
-  async function send(){
-    if(isStreaming) return;
-  
-    const prompt = promptEl.value.trim();
-    if(!prompt) return;
-  
-    addBubble(prompt, "user");
-    promptEl.value = "";
-  
-    const online = await checkHealth();
-    if(!online){
-      addBubble("SolarAI is offline.", "ai");
-      return;
+      return "sess_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
     }
-  
-    const aiBubble = addBubble("", "ai");
-    let buffer = "";
-  
-    isStreaming = true;
-    sendBtn.disabled = true;
-  
-    try{
-      const res = await fetch(API_BASE + "/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt,
-          stream: true,
-          session_id: sessionId,
-          max_tokens: 500
-        })
-      });
-  
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-  
-      while(true){
-        const { value, done } = await reader.read();
-        if(done) break;
-  
-        if(value){
-          buffer += decoder.decode(value, { stream: true });
-          aiBubble.innerHTML = renderMarkdown(buffer);
-          chatArea.scrollTop = chatArea.scrollHeight;
+
+    function loadOrCreateSessionId() {
+      let sid = (localStorage.getItem(SESSION_KEY) || "").trim();
+      if (!sid) {
+        sid = makeSessionId();
+        localStorage.setItem(SESSION_KEY, sid);
+      }
+      return sid;
+    }
+
+    function setSessionId(sid) {
+      const cleaned = (sid || "").trim();
+      if (!cleaned) return;
+      sessionId = cleaned;
+      localStorage.setItem(SESSION_KEY, cleaned);
+    }
+
+    function getApiToken() {
+      return (localStorage.getItem(TOKEN_KEY) || "").trim();
+    }
+
+    function getLanguage() {
+      return (localStorage.getItem(LANG_KEY) || "auto").trim() || "auto";
+    }
+
+    function nowApiFormat() {
+      return new Date().toISOString().slice(0, 19).replace("T", " ");
+    }
+
+    function setStatus(state) {
+      apiStatus.classList.remove("online", "offline");
+      if (state === "online") {
+        apiStatus.classList.add("online");
+        apiStatusText.textContent = t("t_online", "Online");
+      } else if (state === "offline") {
+        apiStatus.classList.add("offline");
+        apiStatusText.textContent = t("t_offline", "Offline");
+      } else {
+        apiStatus.classList.add("offline");
+        apiStatusText.textContent = t("t_checking", "Checking...");
+      }
+    }
+
+    function renderMarkdown(text) {
+      const raw = marked.parse(text || "");
+      return DOMPurify.sanitize(raw);
+    }
+
+    function scrollBottom() {
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    function addBubble(text, who) {
+      const div = document.createElement("div");
+      div.className = "bubble " + who;
+      if (who === "ai") {
+        div.innerHTML = renderMarkdown(text || "...");
+      } else {
+        div.textContent = text || "";
+      }
+      chatArea.appendChild(div);
+      scrollBottom();
+      return div;
+    }
+
+    function buildPayload(prompt, stream) {
+      return {
+        prompt: (prompt || "").trim(),
+        language: getLanguage(),
+        data_e_hora: nowApiFormat(),
+        stream: !!stream,
+        max_tokens: MAX_TOKENS,
+        session_id: sessionId,
+        reset: !!pendingReset,
+        token: getApiToken(),
+        system_prompt: ""
+      };
+    }
+
+    async function readErrorMessage(resp) {
+      let txt = "";
+      try { txt = await resp.text(); } catch (_) {}
+      if (!txt) return `HTTP ${resp.status}`;
+      try {
+        const obj = JSON.parse(txt);
+        const detail = obj.detail || obj.error || obj.message || obj.text;
+        if (detail) return `HTTP ${resp.status}: ${String(detail).slice(0, 300)}`;
+      } catch (_) {}
+      return `HTTP ${resp.status}: ${txt.slice(0, 300)}`;
+    }
+
+    async function checkHealth() {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), HEALTH_TIMEOUT_MS);
+      try {
+        const res = await fetch(API_BASE + "/health", { signal: controller.signal });
+        if (res.ok) {
+          setStatus("online");
+          return true;
         }
+      } catch (_) {}
+      finally {
+        clearTimeout(timer);
       }
-  
-    }catch(e){
-      aiBubble.innerHTML = renderMarkdown("Request failed.");
+      setStatus("offline");
+      return false;
     }
-  
-    isStreaming = false;
-    sendBtn.disabled = false;
-  }
-  
-  function newChat(){
-    chatArea.innerHTML = "";
-    sessionId = crypto.randomUUID();
-    localStorage.setItem(SESSION_KEY, sessionId);
-  }
-  
-  sendBtn.addEventListener("click", send);
-  clearBtn.addEventListener("click", () => chatArea.innerHTML = "");
-  newChatBtn.addEventListener("click", newChat);
-  
-  promptEl.addEventListener("keydown", (e) => {
-    if(e.key === "Enter" && !e.shiftKey){
-      e.preventDefault();
-      send();
+
+    async function runStreamGenerate(prompt, aiBubble) {
+      const payload = buildPayload(prompt, true);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+      try {
+        const res = await fetch(API_BASE + "/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+
+        if (!res.ok) {
+          throw new Error(await readErrorMessage(res));
+        }
+
+        const sidHeader = (res.headers.get("x-solarai-session") || "").trim();
+        if (sidHeader) setSessionId(sidHeader);
+
+        if (!res.body) {
+          return "";
+        }
+
+        let acc = "";
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          if (!value) continue;
+
+          acc += decoder.decode(value, { stream: true });
+          aiBubble.innerHTML = renderMarkdown(acc);
+          scrollBottom();
+        }
+
+        acc += decoder.decode();
+        return acc;
+      } finally {
+        clearTimeout(timer);
+      }
     }
-  });
-  
-  setStatus("checking");
-  setTimeout(checkHealth, 100);
-  setInterval(checkHealth, 15000);
+
+    async function runOneShotGenerate(prompt) {
+      const payload = buildPayload(prompt, false);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+      try {
+        const res = await fetch(API_BASE + "/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+
+        if (!res.ok) {
+          throw new Error(await readErrorMessage(res));
+        }
+
+        const data = await res.json();
+        const text = (data && data.text ? String(data.text) : "").trim();
+        const sid = (data && data.session_id ? String(data.session_id) : "").trim();
+        if (sid) setSessionId(sid);
+        return text;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function send() {
+      if (isStreaming) return;
+
+      const prompt = (promptEl.value || "").trim();
+      if (!prompt) return;
+
+      addBubble(prompt, "user");
+      promptEl.value = "";
+
+      const online = await checkHealth();
+      if (!online) {
+        addBubble(t("t_offline_msg", "SolarAI is offline."), "ai");
+        return;
+      }
+
+      const aiBubble = addBubble("...", "ai");
+      isStreaming = true;
+      sendBtn.disabled = true;
+
+      let acc = "";
+      let serverTouched = false;
+
+      try {
+        try {
+          acc = await runStreamGenerate(prompt, aiBubble);
+          serverTouched = true;
+        } catch (streamErr) {
+          if (acc.trim()) {
+            aiBubble.innerHTML = renderMarkdown(acc + "\n\n_[stream interrompido]_\n" + String(streamErr));
+          }
+        }
+
+        if (!acc.trim()) {
+          acc = await runOneShotGenerate(prompt);
+          serverTouched = true;
+          aiBubble.innerHTML = renderMarkdown(acc || "Sem resposta.");
+          scrollBottom();
+        }
+      } catch (err) {
+        const fallback = t("t_error_msg", "Request failed.");
+        aiBubble.innerHTML = renderMarkdown(`${fallback}\n\n${String(err && err.message ? err.message : err)}`);
+        scrollBottom();
+      } finally {
+        if (serverTouched) {
+          pendingReset = false;
+        }
+        isStreaming = false;
+        sendBtn.disabled = false;
+      }
+    }
+
+    function newChat() {
+      chatArea.innerHTML = "";
+      setSessionId(makeSessionId());
+      pendingReset = true;
+    }
+
+    clearBtn.addEventListener("click", () => {
+      chatArea.innerHTML = "";
+    });
+
+    newChatBtn.addEventListener("click", newChat);
+    sendBtn.addEventListener("click", send);
+
+    promptEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        send();
+      }
+    });
+
+    promptEl.placeholder = t("t_placeholder", "Type your message...");
+    setStatus("checking");
+    setTimeout(checkHealth, 100);
+    setInterval(checkHealth, 15000);
+  })();
   </script>
 </body>
 </html>
