@@ -450,12 +450,6 @@
           </div>
 
           <div class="chatControls">
-            <select id="langSelect" aria-label="Language">
-              <option value="auto" data-i18n="ai_lang_auto"></option>
-              <option value="pt">pt</option>
-              <option value="en">en</option>
-            </select>
-
             <button class="ghostBtn" id="clearBtn" type="button">
               <span data-i18n="ai_clear"></span>
             </button>
@@ -498,7 +492,6 @@
     const promptEl = document.getElementById("prompt");
     const sendBtn = document.getElementById("sendBtn");
     const clearBtn = document.getElementById("clearBtn");
-    const langSelect = document.getElementById("langSelect");
 
     // strings (i18n.js preenche)
     const T = {
@@ -566,12 +559,15 @@
       return false;
     }
 
-    function getLanguageToSend(){
-      const v = (langSelect.value || "auto").toLowerCase();
-      if(v !== "auto") return v;
-      return (document.documentElement.lang || "en").toLowerCase().startsWith("pt") ? "pt" : "en";
-    }
+function getLanguageToSend(){
+  // Prioridade: <html lang="..."> (se teu i18n.js define) -> navegador
+  const docLang = (document.documentElement.lang || "").toLowerCase();
+  if (docLang.startsWith("pt")) return "pt";
+  if (docLang.startsWith("en")) return "en";
 
+  const nav = (navigator.language || "en").toLowerCase();
+  return nav.startsWith("pt") ? "pt" : "en";
+}
     async function send(){
       if(isStreaming) return;
 
