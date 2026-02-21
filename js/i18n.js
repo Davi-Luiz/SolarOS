@@ -6,6 +6,7 @@
   const DEFAULT_LANG = "pt";
   const VERSION = window.SOLAROS_LANG_VERSION ?? "3";
   const STORAGE_KEY = "lang";
+  const SOLARAI_LANG_KEY = "solarai_language";
 
   function normalizeLang(raw) {
     const v = String(raw || "").trim().toLowerCase();
@@ -104,6 +105,12 @@
       if (typeof val === "string") el.setAttribute("aria-label", val);
     });
 
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      const val = dict?.[key];
+      if (typeof val === "string") el.setAttribute("placeholder", val);
+    });
+
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
       const val = dict?.[key];
@@ -127,6 +134,8 @@
     }
 
     applyTranslations(dict, safeLang);
+    try { localStorage.setItem(SOLARAI_LANG_KEY, safeLang); } catch {}
+    document.dispatchEvent(new CustomEvent("i18n:updated", { detail: { lang: safeLang, dict } }));
     return safeLang;
   }
 
