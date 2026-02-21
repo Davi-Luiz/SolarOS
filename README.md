@@ -115,8 +115,8 @@ These tools are not part of the running system.
 -   [x] Functional bootloader
 -   [x] Custom bootloader
 -   [x] Custom file system
--   [ ] Initial kernel
--   [ ] Graphical interface
+-   [x] Initial kernel
+-   [x] Graphical interface
 -   [ ] Kernel expansion
 -   [ ] Advanced SolarAI™ integration
 
