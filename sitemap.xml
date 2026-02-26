@@ -3,18 +3,30 @@
 
   <url>
     <loc>https://davi-luiz.github.io/SolarOS/</loc>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://davi-luiz.github.io/SolarOS/SolarAI/</loc>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://davi-luiz.github.io/SolarOS/download/</loc>
-  </url>
-  
-  <url>
-    <loc>https://davi-luiz.github.io/SolarOS/SolarAI/</loc>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://davi-luiz.github.io/SolarOS/about/</loc>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
 </urlset>
